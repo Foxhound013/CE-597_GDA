@@ -1,4 +1,3 @@
-library(lattice)
 ##### Section 1.1 #####
 
 # Read in the file
@@ -28,15 +27,36 @@ tweet_count <- as.data.frame(table(data$user_id)) # table produces a table of co
 names(tweet_count) <- c('user_id', 'freq')
 tweet_count <- tweet_count[order(tweet_count$freq, decreasing=TRUE),]
 
-plot(tweet_count)
+plot(tweet_count$freq, col='blue', ylab='Frequency of Tweets', xlab='Index',
+     main='Tweet Frequency on a User by User Basis')
+
 # Viualize, small number of users generate the most tweets
 
 
 
 
-
-
-
-
-
 ##### Section 1.3 #####
+
+# Summarize the number of tweets over weekends (S&S)and workdays(M-F); visualize it
+
+
+
+
+
+
+# Summarize the number of tweets over time of the day (0-24h); visualize it
+
+
+
+
+
+# Summarize the (average) frequency of tweeting (time interval between two adjacent tweets); 
+# visualize it
+
+
+
+
+
+
+
+
