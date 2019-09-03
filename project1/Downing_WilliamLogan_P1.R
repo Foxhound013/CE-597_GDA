@@ -32,19 +32,32 @@ plot(tweet_count$freq, col='blue', ylab='Frequency of Tweets', xlab='Index',
 
 # Viualize, small number of users generate the most tweets
 
+# The previous plot sort of accomplishes this already. Zoom in on the head and tail
+# to emphasize this.
 
+par(mfrow=c(1,2))
+plot(head(tweet_count$freq, n=50L), col='red', ylab='Frequency of Tweets', xlab='Index',
+     main='Top 50 Tweet Frequency')
+plot(tail(tweet_count$freq, n=50L), col='blue', ylab='Frequency of Tweets', xlab='Index',
+     main='Bottom 50 Tweet Frequency')
+mtext('Top and Bottom 50 Tweet Frequency', outer = TRUE)
 
+# Reset the grahical parameter for future use
+par(mfrow=c(1,1))
 
 ##### Section 1.3 #####
 
 # Summarize the number of tweets over weekends (S&S)and workdays(M-F); visualize it
-
+weekday_tweets = as.data.frame(table(data$weekday))
 
 
 
 
 
 # Summarize the number of tweets over time of the day (0-24h); visualize it
+hour_tweets = as.data.frame(table(data$hour))
+names(hour_tweets) <- c('hour', 'freq')
+plot(hour_tweets) #! Pretty it up
 
 
 
