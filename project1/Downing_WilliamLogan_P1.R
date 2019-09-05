@@ -41,7 +41,6 @@ plot(head(tweet_count$freq, n=50L), col='red', ylab='Frequency of Tweets', xlab=
      main='Top 50 Tweet Frequency')
 plot(tail(tweet_count$freq, n=50L), col='blue', ylab='Frequency of Tweets', xlab='Index',
      main='Bottom 50 Tweet Frequency')
-mtext('Top and Bottom 50 Tweet Frequency', outer = TRUE)
 
 # Reset the grahical parameter for future use
 par(mfrow=c(1,1))
@@ -57,6 +56,8 @@ weekday_tweets$day <- factor(weekday_tweets$day, levels= c("Sun", "Mon",
                                                            "Tue", "Wed", 
                                                            "Thu", "Fri", 
                                                            "Sat"))
+
+print(weekday_tweets)
 
 qplot(weekday_tweets$day, weekday_tweets$freq, xlab='Day of Week', ylab='Frequency of Tweets',
       main='Frequency of Tweets by Day') + theme(plot.title = element_text(hjust = 0.5))
@@ -78,9 +79,9 @@ time_diff <- as.data.frame(as.numeric(diff.Date(data$datetime)))
 names(time_diff) <- c('time_tweets')
 
 summary(time_diff)
-
+par(mfrow=c(1,2))
 plot(time_diff$time_tweets, xlab='Index', ylab='Time Difference in Minutes',
      main='Time between tweets') # This plot doesn't work well at all.
 
 boxplot(time_diff$time_tweets, outline=F, ylab='Time Between Tweets',
-        main='Summary of Temporal Difference between Tweets')
+        main='Summary')
