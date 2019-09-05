@@ -1,3 +1,4 @@
+library(ggplot2)
 ##### Section 1.1 #####
 
 # Read in the file
@@ -49,27 +50,37 @@ par(mfrow=c(1,1))
 
 # Summarize the number of tweets over weekends (S&S)and workdays(M-F); visualize it
 weekday_tweets = as.data.frame(table(data$weekday))
+names(weekday_tweets) = c('day', 'freq')
 
+# Order the days of the week
+weekday_tweets$day <- factor(weekday_tweets$day, levels= c("Sun", "Mon", 
+                                                           "Tue", "Wed", 
+                                                           "Thu", "Fri", 
+                                                           "Sat"))
 
-
+qplot(weekday_tweets$day, weekday_tweets$freq, xlab='Day of Week', ylab='Frequency of Tweets',
+      main='Frequency of Tweets by Day') + theme(plot.title = element_text(hjust = 0.5))
 
 
 # Summarize the number of tweets over time of the day (0-24h); visualize it
 hour_tweets = as.data.frame(table(data$hour))
 names(hour_tweets) <- c('hour', 'freq')
-plot(hour_tweets) #! Pretty it up
-
-
-
+qplot(hour_tweets$hour, hour_tweets$freq, xlab='Hour of Day', ylab='Frequency of Tweets',
+      main='Frequency of Tweets by Hour') + theme(plot.title = element_text(hjust = 0.5))
 
 
 # Summarize the (average) frequency of tweeting (time interval between two adjacent tweets); 
 # visualize it
 
+  #order the datetime, ascending
+data <- data[ order(data$datetime, decreasing=FALSE),]
+time_diff <- as.data.frame(as.numeric(diff.Date(data$datetime)))
+names(time_diff) <- c('time_tweets')
 
+summary(time_diff)
 
+plot(time_diff$time_tweets, xlab='Index', ylab='Time Difference in Minutes',
+     main='Time between tweets') # This plot doesn't work well at all.
 
-
-
-
-
+boxplot(time_diff$time_tweets, outline=F, ylab='Time Between Tweets',
+        main='Summary of Temporal Difference between Tweets')
