@@ -1,4 +1,5 @@
-library(ggplot2)
+library(leaflet)
+library(tidyverse)
 ##### Section 1.1 #####
 
 # Read in the file
@@ -85,3 +86,10 @@ plot(time_diff$time_tweets, xlab='Index', ylab='Time Difference in Minutes',
 
 boxplot(time_diff$time_tweets, outline=F, ylab='Time Between Tweets',
         main='Summary')
+
+
+##### Exploratory #####
+# Lets build a map showing the spatial extent of the data
+m <- leaflet(data=cbind(data$longitude, data$latitude)) %>% 
+  addTiles() %>% addCircles() %>% addScaleBar() %>% add
+m
