@@ -93,3 +93,13 @@ boxplot(time_diff$time_tweets, outline=F, ylab='Time Between Tweets',
 m <- leaflet(data=cbind(data$longitude, data$latitude)) %>% 
   addTiles() %>% addCircles() %>% addScaleBar() %>% add
 m
+
+
+
+# Addendum
+# Following code is from suggestion of fellow classmate.
+daynum <- as.numeric(strftime(data$datetime, format='%j'))
+tmp <- as.data.frame(table(daynum))
+plot(tmp)
+
+# Notice all of the missing data! Something is wrong with the data.
