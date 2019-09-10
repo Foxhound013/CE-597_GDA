@@ -1,0 +1,2 @@
+200312041331   1    77     0thomas68 c:\winnt\profiles\thomas68\locals~1\temp\grid1 = IDW(n:\557project\gis\particulatematter.shp,Total,#,2,SAMPLE,12,#,162.873706,479214.715174, 4451372.540986, 538634.138586, 4492090.967572)
+200312041331   0     1     0thomas68 c:\winnt\profiles\thomas68\locals~1\temp\ctour1.shp = CONTOUR(c:\winnt\profiles\thomas68\locals~1\temp\grid1,INTERVAL,2,0)
