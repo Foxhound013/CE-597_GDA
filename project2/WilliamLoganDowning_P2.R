@@ -42,31 +42,6 @@ sp_bbox = sp::bbox(sp)
 
 sf_bbox; sp_bbox;
 
-# Create a shapefile from the input data. First verify files don't exist.
-fpath_sp = './data/processed/sp_out.shp'
-if (file.exists(fpath_sp)) {
-  file.remove(fpath_sp)
-  gsub('.shp', '.dbf', fpath_sp) %>% file.remove()
-  gsub('.shp', '.shx', fpath_sp) %>% file.remove()
-  gsub('.shp', '.prj', fpath_sp) %>% file.remove()
-}
-
-fpath_sf = './data/processed/sf_out.shp'
-if (file.exists(fpath_sf)) {
-  file.remove(fpath_sf)
-  gsub('.shp', '.dbf', fpath_sf) %>% file.remove()
-  gsub('.shp', '.shx', fpath_sf) %>% file.remove()
-  gsub('.shp', '.prj', fpath_sf) %>% file.remove()
-}
-## Do so from an sp object
-rgdal::writeOGR(sp, dsn=fpath_sp, layer='tweets', driver='ESRI Shapefile')
-
-## Do so from an sf object
-sf::st_write(sf, dsn='./data/processed/sf_out.shp', layer='tweets', driver='ESRI Shapefile')
-
-# The coordinate system and bbox have been assigned to the data prior to writing.
-
-
 
 ##### Section 1.2 #####
 # 1.2. Spatial object I/O and conversion
@@ -75,18 +50,42 @@ sf::st_write(sf, dsn='./data/processed/sf_out.shp', layer='tweets', driver='ESRI
 # • Convert the sf and sp to a shapefile & one other geo-data format & read them in
 # • Create an sf and sp from these read-in’s if needed
 
-# writing the shapeful was completed in Section 1.1 above.
+# Create a shapefile from the input data. First verify files don't exist.
+fpath_sp = './data/processed/sp/sp_out.shp'
+if (file.exists(fpath_sp)) {
+  file.remove(fpath_sp)
+  gsub('.shp', '.dbf', fpath_sp) %>% file.remove()
+  gsub('.shp', '.shx', fpath_sp) %>% file.remove()
+  gsub('.shp', '.prj', fpath_sp) %>% file.remove()
+}
 
+fpath_sf = './data/processed/sf/sf_out.shp'
+if (file.exists(fpath_sf)) {
+  file.remove(fpath_sf)
+  gsub('.shp', '.dbf', fpath_sf) %>% file.remove()
+  gsub('.shp', '.shx', fpath_sf) %>% file.remove()
+  gsub('.shp', '.prj', fpath_sf) %>% file.remove()
+}
+
+## Do so from an sp object
+rgdal::writeOGR(sp, dsn='./data/processed/sp/sp_out.shp', layer='tweets', driver='ESRI Shapefile')
+
+## Do so from an sf object
+sf::st_write(sf, dsn='./data/processed/sf/sf_out.shp', layer='tweets', driver='ESRI Shapefile')
 # Need clarification on what is wanted here.
 
 
+# Read your data back from the files just created.
+sf_tweets <- st_read(dsn='./data/processed/sf/sf_out.shp')
+sp_tweets <- readOGR(dsn='./data/processed/sp/sp_out.shp')
 
+# Let's convert my sf and sp objects to geojson
+writeOGR(sp_tweets, "./data/processed/sp/sp_geojson", layer="sp_tweets", driver="GeoJSON")
+st_write(sf_tweets, "./data/processed/sf/sf_geojson", layer="sf_tweets", driver="GeoJSON")
 
-
-
-
-
-
+# read them in, don't save to a var just to save space
+st_read(dsn='./data/processed/sf/sf_geojson')
+readOGR(dsn='./data/processed/sp/sp_geojson')
 
 ##### Section 1.3 #####
 # 1.3. Spatial object’s attribute manipulation (use the sf file from 1.1)
