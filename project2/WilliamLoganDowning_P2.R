@@ -3,6 +3,7 @@ library(sf)
 library(sp)
 library(rgdal)
 library(tidyverse)
+library(tmap)
 
 ##### Section 1.1 #####
 # 1.1. Data preparation - sp and sf object creation
@@ -94,18 +95,14 @@ readOGR(dsn='./data/processed/sp/sp_geojson')
 # • Subset the columns/info you will use and keep the rest as a new sf file
 # • Stay with this sf file onwards
 
+# I had completed this earlier but repeated here for sake of the question.
+sf$datetime <- as.POSIXct(data$epoch, origin="1970-01-01", tz="EST")
+sf$date <- format(sf$datetime, format='%d-%m-%Y')
+sf$dayOfWeek <- format(sf$datetime, format='%w')
+sf$localTime <- format(sf$datetime, format='%X')
 
-# Convert Epoch time: Taken care of from the start. May want to rethink
-# this one and just do that conversion at this point.
-
-
-
-
-
-
-
-
-
+# subset the data
+sf_sub = sf[,c('user_id', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
 
 
 ##### Section 1.4 #####
@@ -116,8 +113,9 @@ readOGR(dsn='./data/processed/sp/sp_geojson')
 # • Color-code the map based on selected individual users
 # • Prepare clean versions of above maps for discuss/presentation
 
+tmap_mode('view')
 
-
+tm_shape()
 
 
 
