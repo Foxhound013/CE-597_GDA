@@ -69,16 +69,16 @@ if (file.exists(fpath_sf)) {
 }
 
 ## Do so from an sp object
-rgdal::writeOGR(sp, dsn='./data/processed/sp/sp_out.shp', layer='tweets', driver='ESRI Shapefile')
+rgdal::writeOGR(sp, dsn='./data/processed/sp', layer='sp_out', driver='ESRI Shapefile')
 
 ## Do so from an sf object
-sf::st_write(sf, dsn='./data/processed/sf/sf_out.shp', layer='tweets', driver='ESRI Shapefile')
+sf::st_write(sf, dsn='./data/processed/sf', layer='sf_out', driver='ESRI Shapefile')
 # Need clarification on what is wanted here.
 
 
 # Read your data back from the files just created.
-sf_tweets <- st_read(dsn='./data/processed/sf/sf_out.shp')
-sp_tweets <- readOGR(dsn='./data/processed/sp/sp_out.shp')
+sf_tweets <- st_read(dsn='./data/processed/sf', layer='sf_out')
+sp_tweets <- readOGR(dsn='./data/processed/sp', layer='sp_out')
 
 # Let's convert my sf and sp objects to geojson
 writeOGR(sp_tweets, "./data/processed/sp/sp_geojson", layer="sp_tweets", driver="GeoJSON")
@@ -96,13 +96,14 @@ readOGR(dsn='./data/processed/sp/sp_geojson')
 # • Stay with this sf file onwards
 
 # I had completed this earlier but repeated here for sake of the question.
-sf$datetime <- as.POSIXct(data$epoch, origin="1970-01-01", tz="EST")
-sf$date <- format(sf$datetime, format='%d-%m-%Y')
-sf$dayOfWeek <- format(sf$datetime, format='%w')
 sf$localTime <- format(sf$datetime, format='%X')
+sf_tweets$datetime <- as.POSIXct(sf_tweets$epoch, origin="1970-01-01", tz="EST")
+sf_tweets$date <- format(sf_tweets$datetime, format='%d-%m-%Y')
+sf_tweets$dayOfWeek <- format(sf_tweets$datetime, format='%w')
+sf_tweets$localTime <- format(sf_tweets$datetime, format='%X')
 
-# subset the data
-sf_sub = sf[,c('user_id', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
+# subset the data, it looks like a few of the columns got messed up when making the sh file
+sf_sub = sf_tweets[,c('user_d', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
 
 
 ##### Section 1.4 #####
@@ -115,14 +116,44 @@ sf_sub = sf[,c('user_id', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 
 
 tmap_mode('view')
 
-tm_shape()
+tm_shape(sf_sub) + tm_dots(col='gray') +
+  tm_layout(title='Spatial Distribution of Tweets - West Lafayette')
+
+# color map based on month
+# add month to the sf dataframe
+sf_sub$month = strftime(sf_sub$datetime, format='%B')
+sf_sub$month = factor(sf_sub$month, levels=c('January', 'February', 'March', 'April',
+                      'May', 'June', 'July', 'August', 'September', 'October',
+                      'November', 'December'))
+
+tm_shape(sf_sub) + tm_dots('month', title='Month') + 
+  tm_layout(title='Spatial Distribution of Tweets by Month - West Lafayette')
 
 
 
 
+# Day of Week
+sf_sub$dayOfWeek = strftime(sf_sub$datetime, format='%A') %>%
+  factor(levels=c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+                   'Friday', 'Saturday'))
+
+tm_shape(sf_sub) + tm_dots('dayOfWeek', title='Day of Week') +
+  tm_layout(title='Spatial Distribution of Tweets by Day of Week - West Lafayette')
 
 
+# Hour
+sf_sub$hour = strftime(sf_sub$datetime, format='%H') %>%
+  factor(levels=c('00', '01', '02', '03', '04', '05', '06', '07', '08',
+                  '09', '10', '11', '12', '13', '14', '15', '16', '17',
+                  '18', '19', '20', '21', '22', '23'))
+sf_sub$hours_cut = cut(as.numeric(sf_sub$hour), breaks = seq(0,24,6), 
+                       labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
 
+tm_shape(sf_sub) + tm_dots('hours_cut', title='Hour of the Day')+
+  tm_layout(title='Spatial Distribution of Tweets by Hour of the Day - West Lafayette')
+
+
+# color code map for top 20% of individual tweets? Maybe?
 
 
 
@@ -134,7 +165,7 @@ tm_shape()
 # • Make sure your maps are clean/clear
 
 
-
+# Kernel density estimation is how you'll do this one.
 
 
 
@@ -149,7 +180,10 @@ tm_shape()
 # • Summarize and visualize the daily moving distances of selected (or all) individuals
 # • Creative visualization 
 
+# estimate euclidean distance traveled by user id?
 
+# create a map animation that will allow roll through the time window plotting user locations
+# through time.
 
 
 
