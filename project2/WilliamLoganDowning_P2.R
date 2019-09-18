@@ -4,6 +4,8 @@ library(sp)
 library(rgdal)
 library(tidyverse)
 library(tmap)
+library(tmaptools)
+library(OpenStreetMap) # You'll need java 64 bit to run this.
 
 ##### Section 1.1 #####
 # 1.1. Data preparation - sp and sf object creation
@@ -13,7 +15,8 @@ library(tmap)
 # • Assign the coord. system as WGS 84 (no map projection) to all associates data files
 # • Create and assign the bounding box to all data files
 
-data <- read.csv('./data/raw/pu2014.csv', header=T, stringsAsFactors=F)
+fpath <- './data/raw/pu2014.csv'
+data <- read.csv(fpath, header=T, stringsAsFactors=F)
 data$datetime <- as.POSIXct(data$epoch, origin="1970-01-01")
 
 # Create your sp object.
@@ -96,14 +99,13 @@ readOGR(dsn='./data/processed/sp/sp_geojson')
 # • Stay with this sf file onwards
 
 # I had completed this earlier but repeated here for sake of the question.
-sf$localTime <- format(sf$datetime, format='%X')
 sf_tweets$datetime <- as.POSIXct(sf_tweets$epoch, origin="1970-01-01", tz="EST")
 sf_tweets$date <- format(sf_tweets$datetime, format='%d-%m-%Y')
 sf_tweets$dayOfWeek <- format(sf_tweets$datetime, format='%w')
 sf_tweets$localTime <- format(sf_tweets$datetime, format='%X')
 
 # subset the data, it looks like a few of the columns got messed up when making the sh file
-sf_sub = sf_tweets[,c('user_d', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
+sf_sub = sf_tweets[,c('user_d', 'usr_sc_', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
 
 
 ##### Section 1.4 #####
@@ -116,7 +118,7 @@ sf_sub = sf_tweets[,c('user_d', 'geometry', 'epoch', 'datetime', 'date', 'dayOfW
 
 tmap_mode('view')
 
-tm_shape(sf_sub) + tm_dots(col='gray') +
+tm_shape(sf_sub) + tm_dots(col='blue') +
   tm_layout(title='Spatial Distribution of Tweets - West Lafayette')
 
 # color map based on month
@@ -128,7 +130,6 @@ sf_sub$month = factor(sf_sub$month, levels=c('January', 'February', 'March', 'Ap
 
 tm_shape(sf_sub) + tm_dots('month', title='Month') + 
   tm_layout(title='Spatial Distribution of Tweets by Month - West Lafayette')
-
 
 
 
@@ -146,6 +147,7 @@ sf_sub$hour = strftime(sf_sub$datetime, format='%H') %>%
   factor(levels=c('00', '01', '02', '03', '04', '05', '06', '07', '08',
                   '09', '10', '11', '12', '13', '14', '15', '16', '17',
                   '18', '19', '20', '21', '22', '23'))
+# break the hours up into manageable chunks
 sf_sub$hours_cut = cut(as.numeric(sf_sub$hour), breaks = seq(0,24,6), 
                        labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
 
@@ -153,8 +155,20 @@ tm_shape(sf_sub) + tm_dots('hours_cut', title='Hour of the Day')+
   tm_layout(title='Spatial Distribution of Tweets by Hour of the Day - West Lafayette')
 
 
-# color code map for top 20% of individual tweets? Maybe?
+# color code map for top 5 tweeters?
+tweet_total <- data.frame(table(sf_sub$user_d))
+names(tweet_total) <- c('user_id', 'freq')
+tweet_total <- tweet_total[order(tweet_total$freq, decreasing=T),]
+top3 <- as.numeric(as.character(tweet_total[seq(1,3,1), 'user_id']))
 
+top3 <- sapply(top3, function(x) which(sf_sub$user_d == x))
+top3 <- sf_sub[unlist(top3),]
+top3$user_d <- as.factor(top3$user_d)
+top3$usr_sc_ <- as.factor(as.character(top3$usr_sc_))
+
+
+tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name') +
+  tm_layout(title='Top 3 Tweeters in Dataset')
 
 
 ##### Section 1.5 #####
@@ -164,10 +178,27 @@ tm_shape(sf_sub) + tm_dots('hours_cut', title='Hour of the Day')+
 # individuals
 # • Make sure your maps are clean/clear
 
+# This is how you can get the open streeet map backgournd m = read_osm(sf_sub)
+# m=read_osm(st_bbox(sf_tweets))
+# tmap_mode('plot')
+# tm_shape(m) + tm_rgb() + tm_shape(top3) + 
+#   tm_dots('usr_sc_', palette=c('cyan', 'red', 'blue'), size=.1, clustering=T)
+# Could I do this map but over time slices
+tm_shape(top3) + 
+  tm_dots('usr_sc_', palette=c('cyan', 'red', 'blue'), size=.1, clustering=T)
+  
+# for the spatial-temporal distro, how would I represent these 3 individuals movements?
+# maybe you can calculate distance covered at each time step by each user
+# do this as a line graph for the report but
+# include a link to animation of tweets every hour. Minute scale would be better but unrealistic.
 
 # Kernel density estimation is how you'll do this one.
+# Maybe try using dplyr to group by in your sf object
 
-
+# try plotting a single time slice, maybe there's a way to average all positions
+# and set size of circle based on time slice
+# maybe make animation?
+tm_shape()
 
 
 
