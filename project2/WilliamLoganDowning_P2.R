@@ -6,6 +6,7 @@ library(tidyverse)
 library(tmap)
 library(tmaptools)
 library(OpenStreetMap) # You'll need java 64 bit to run this.
+library(raster)
 
 ##### Section 1.1 #####
 # 1.1. Data preparation - sp and sf object creation
@@ -106,6 +107,10 @@ sf_tweets$localTime <- format(sf_tweets$datetime, format='%X')
 
 # subset the data, it looks like a few of the columns got messed up when making the sh file
 sf_sub = sf_tweets[,c('user_d', 'usr_sc_', 'geometry', 'epoch', 'datetime', 'date', 'dayOfWeek', 'localTime')]
+#recover the lat long data for future use.
+tmp_c <- data.frame(st_coordinates(sf_sub$geometry))
+sf_sub$lat <- tmp_c$Y
+sf_sub$lon <- tmp_c$X
 
 
 ##### Section 1.4 #####
@@ -178,6 +183,28 @@ tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name') +
 # individuals
 # • Make sure your maps are clean/clear
 
+
+
+
+
+
+
+
+
+# Could you groub by hour or month? Then you could see how the hotspots change over time?
+expenses %>% group_by(month=lubridate::floor_date(date, "month")) %>%
+  summarize(amount=mean(geometry))
+
+tmp <- sf_sub %>% group_by(month=lubridate::floor_date(datetime, "month")) %>%
+  summarize(avg_location=mean(geometry))
+
+# perhaps an in depth approach would use dplyr to group by every x minutes (maybe 15)
+# on the data set and plot tweets, irrespective of users, using a harmonic or geometric
+# average.
+floor(sf_sub[,'datetime'])
+sf_sub[which('')]
+
+
 # This is how you can get the open streeet map backgournd m = read_osm(sf_sub)
 # m=read_osm(st_bbox(sf_tweets))
 # tmap_mode('plot')
@@ -185,7 +212,8 @@ tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name') +
 #   tm_dots('usr_sc_', palette=c('cyan', 'red', 'blue'), size=.1, clustering=T)
 # Could I do this map but over time slices
 tm_shape(top3) + 
-  tm_dots('usr_sc_', palette=c('cyan', 'red', 'blue'), size=.1, clustering=T)
+  tm_dots('usr_sc_', palette=c('cyan', 'red', 'blue'), size=.1, 
+          clustering=T, title='User Screen Names')
   
 # for the spatial-temporal distro, how would I represent these 3 individuals movements?
 # maybe you can calculate distance covered at each time step by each user
@@ -202,7 +230,9 @@ tm_shape()
 
 
 
-
+# for spatial-temporal distribution, could you make a distance sum graph with
+# all three people across time.
+# i.e. x would time, y would be the sum of the distance at that time?
 
 
 
@@ -211,13 +241,37 @@ tm_shape()
 # • Summarize and visualize the daily moving distances of selected (or all) individuals
 # • Creative visualization 
 
+
+# Want to count tweets for each hour and calculate avg. location of tweets by hour.
+tmp <- sf_sub %>% group_by(hour=hour) %>% 
+  summarize(avg_lat=mean(lat))
+tmp2 <- sf_sub %>% group_by(hour=hour) %>%
+  summarize(avg_lon=mean(lon))
+
+tmp3 <- data.frame(tmp$hour, tmp$avg_lat, tmp2$avg_lon)
+names(tmp3) <- c('hour', 'avg_lat', 'avg_lon')
+
+tmp3 <- st_as_sf(tmp3, coords=c('avg_lon', 'avg_lat'), crs=4326)
+# Now if you figure out the counts for each hour, you can scale your circles by that count.
+countsByHour <- sf_sub %>% group_by(hour=hour) %>%
+  count
+tmp3$count <- countsByHour$n
+tmp3$hours_cut = cut(as.numeric(tmp3$hour), breaks = seq(0,24,6), 
+                     labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
+tmp3$scale <- ((tmp3$count - min(tmp3$count))/ (max(tmp3$count) - min(tmp3$count)))
+
+tmap_mode('view')
+tm_shape(tmp3) + tm_dots('hours_cut', size='scale') +
+  tm_layout(title='Average Tweet Locations by Hour Range')
+
 # estimate euclidean distance traveled by user id?
 
 # create a map animation that will allow roll through the time window plotting user locations
 # through time.
 
 
-
+# Could you tranfer the first location in lat long from the user to a polar coordinate system and
+# plot on a circular graph?
 
 
 
