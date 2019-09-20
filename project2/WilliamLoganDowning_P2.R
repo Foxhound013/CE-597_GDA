@@ -77,8 +77,6 @@ rgdal::writeOGR(sp, dsn='./data/processed/sp', layer='sp_out', driver='ESRI Shap
 
 ## Do so from an sf object
 sf::st_write(sf, dsn='./data/processed/sf', layer='sf_out', driver='ESRI Shapefile')
-# Need clarification on what is wanted here.
-
 
 # Read your data back from the files just created.
 sf_tweets <- st_read(dsn='./data/processed/sf', layer='sf_out')
@@ -172,7 +170,7 @@ top3$user_d <- as.factor(top3$user_d)
 top3$usr_sc_ <- as.factor(as.character(top3$usr_sc_))
 
 
-tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name') +
+tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name', palette='Spectral') +
   tm_layout(title='Top 3 Tweeters in Dataset')
 
 
@@ -183,11 +181,9 @@ tm_shape(top3) + tm_dots('usr_sc_', title='Top 3 Tweeters by Screen Name') +
 # individuals
 # • Make sure your maps are clean/clear
 
-# How about making the cluster map from tmap view into a facet grid with 4 maps.
-# group by hour and cluster on tmap method
-
-tm_shape(sf_sub) + tm_dots('hours_cut',clustering=T, style='kmeans', legend.show=F, ) + 
-  tm_shape(sf_sub) + tm_dots('hours_cut', size=0.02, title='Hour Ranges', alpha=.5) +
+tm_shape(sf_sub) + tm_dots('hours_cut',clustering=T, style='kmeans', legend.show=F) + 
+  tm_shape(sf_sub) + tm_dots('hours_cut', size=0.02, title='Hour Ranges', alpha=.4, 
+                             palette='Spectral') +
   tm_layout(title='Clustered Tweets across Time Ranges')
 
 
@@ -207,7 +203,6 @@ lattice::xyplot(traveled~datetime |factor(usr_sc_), data=travel_sf, xlab='Date',
                 layout=c(1,3))
 
 # This is an auxillary plot that outputs an 8 page pdf with categories group by user and hour
-trellis.device(device="pdf", filename="SpaceTime_Top3ByHour.pdf")
 pdf("SpaceTime_Top3ByHour.pdf")
 lattice::xyplot(traveled~datetime |factor(usr_sc_)*factor(hour), data=travel_sf, xlab='Date', 
                 ylab='Distance Traveled (m)', pch=16, cex='0.8', jitter=T, 
@@ -250,7 +245,7 @@ avg_location$hours_cut = cut(as.numeric(avg_location$hour), breaks = seq(0,24,6)
 # scale the counts down to between 0 and 1
 avg_location$scale <- ((avg_location$count - min(avg_location$count))/ (max(avg_location$count) - min(avg_location$count)))
 
-tmap_mode('view')
+
 tm_shape(avg_location) + tm_dots('hours_cut', size='scale') +
   tm_layout(title='Average Tweet Locations by Hour Range')
 
