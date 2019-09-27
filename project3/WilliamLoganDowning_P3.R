@@ -23,9 +23,9 @@ data_proj$blockArea <- sf::st_area(data_proj) %>% set_units(km^2)
 #sf::st_write(data_proj, './data/processed/tabblock2010_18_pophu_projected', 
 #             layer='tabblock2010_18_pophu_projected', driver='ESRI Shapefile', 
 #             delete_layer=TRUE)
-sf::st_write(data_proj, './data/processed/Tract_2010Census_DP1_IN',
-            layer='Tract_2010Census_DP1_IN_projected', driver='ESRI Shapefile',
-            delete_layer=TRUE)
+#sf::st_write(data_proj, './data/processed/Tract_2010Census_DP1_IN',
+#            layer='Tract_2010Census_DP1_IN_projected', driver='ESRI Shapefile',
+#            delete_layer=TRUE)
 
 ##### 1.2. Thematic mapping for population density #####
 #   - Design a map layout that can produce a map as aesthetic as possible as commercial
@@ -40,9 +40,6 @@ sf::st_write(data_proj, './data/processed/Tract_2010Census_DP1_IN',
 #     hclust, bclust; keep the number of classes to be the same (usually not more than 6)
 #     for all methods.
 
-# First up you're going to need to get the population data from the blocks and add it to
-# the tract data.
-
 data_proj <- data_proj[,c("GEOID10", "NAMELSAD10", "ALAND10", "AWATER10", 
                           "INTPTLAT10", "INTPTLON10", "DP0010001", "blockArea")]
 
@@ -50,13 +47,41 @@ data_proj <- data_proj[,c("GEOID10", "NAMELSAD10", "ALAND10", "AWATER10",
 # Finish tweaking the map layouts
 
 tmap_mode('plot')
-k <- tm_shape(data_proj) + tm_polygons('blockArea', style='kmeans') +
-  tm_compass() + tm_scale() + tm_layout(frame=F)
-j <- tm_shape(data_proj) + tm_polygons('blockArea', style='jenks') + tm_layout(frame=F)
-h <- tm_shape(data_proj) + tm_polygons('blockArea', style='hclust') + tm_layout(frame=F)
-b <- tm_shape(data_proj) + tm_polygons('blockArea', style='bclust') + tm_layout(frame=F)
-pdf('test.pdf')
-tmap_arrange(k,j,h,b, nrow=1, ncol=4) # this seemed to work well
+
+k <- tm_shape(data_proj) + tm_polygons('blockArea', style='kmeans', title='Block Area (Km^2)') +
+  tm_compass(position=c('right', 'bottom'), text.size=2) + 
+  tm_scale_bar(position=c('left', 'bottom'), text.size=2.3) +
+  tm_layout(frame=F, main.title='Population Clustered by Kmeans', 
+            main.title.position='center', main.title.size=2,
+            legend.position=c('left', 'bottom'), legend.text.size=1.4,
+            legend.title.size=1.4,
+            inner.margins = c(.17, 0, 0, 0))
+
+j <- tm_shape(data_proj) + tm_polygons('blockArea', style='jenks', title='Block Area (Km^2)') + 
+  tm_layout(frame=F, main.title='Population Clustered by Jenks',
+            main.title.position='center', main.title.size=2,
+            legend.position=c('right', 'bottom'), legend.text.size=1.4,
+            legend.title.size=1.4,
+            inner.margins = c(.17, 0, 0, 0))
+
+h <- tm_shape(data_proj) + tm_polygons('blockArea', style='hclust', title='Block Area (Km^2)') +
+  tm_layout(frame=F, main.title='Population Clustered by Hclust',
+            main.title.position='center', main.title.size=2,
+            legend.position=c('right', 'bottom'), legend.text.size=1.4,
+            legend.title.size=1.4,
+            inner.margins = c(.17, 0, 0, 0))
+
+b <- tm_shape(data_proj) + tm_polygons('blockArea', style='bclust', title='Block Area (Km^2)',
+                                       legend.is.portrait=T) + 
+  tm_layout(frame=F, main.title='Population Clustered by Bclust',
+            main.title.position='center', main.title.size=2,
+            legend.position=c('right', 'bottom'), legend.text.size=1.4,
+            legend.title.size=1.4,
+            inner.margins = c(.17, 0, 0, 0))
+
+png('./figures/builtInClustering.png',
+    width=1600, height=800)
+tmap_arrange(k,j,h,b, nrow=1, ncol=4, outer.margins = c(0,0,0,0)) # this seemed to work well
 dev.off()
 
 
