@@ -12,7 +12,7 @@ library(tidyverse)
 #     sf as a new column
 #   - The new sf file will be your working file
 
-blocks <- sf::st_read('./data/raw/tabblock2010_18_pophu', layer='tabblock2010_18_pophu')
+#blocks <- sf::st_read('./data/raw/tabblock2010_18_pophu', layer='tabblock2010_18_pophu')
 data <- sf::st_read('./data/raw/Tract_2010Census_DP1_IN/utm', layer='tract_in_selected_utm')
 sf::st_crs(data)
 # epsg code found at https://spatialreference.org/ref/epsg/wgs-84-utm-zone-16n/
@@ -43,21 +43,21 @@ sf::st_write(data_proj, './data/processed/Tract_2010Census_DP1_IN',
 # First up you're going to need to get the population data from the blocks and add it to
 # the tract data.
 
-blocks$TRACTID <- as.factor(as.numeric(substr(as.character(blocks$BLOCKID10), start=1, stop=11)))
-blocks <- as.data.frame(blocks)[,c('TRACTID','POP10')]
-tmp <- blocks %>% group_by(TRACTID) %>% summarize_all(sum)
-# you can now merge the tmp with your tracts df to get the population by tract
+data_proj <- data_proj[,c("GEOID10", "NAMELSAD10", "ALAND10", "AWATER10", 
+                          "INTPTLAT10", "INTPTLON10", "DP0010001", "blockArea")]
 
-# quick visual of data
+# Clustering Mapping Methods
+# Finish tweaking the map layouts
+
 tmap_mode('plot')
-tm_shape(data_proj) + tm_polygons('blockArea', )
-
-# clustering attempts
-
-
-
-
-
+k <- tm_shape(data_proj) + tm_polygons('blockArea', style='kmeans') +
+  tm_compass() + tm_scale() + tm_layout(frame=F)
+j <- tm_shape(data_proj) + tm_polygons('blockArea', style='jenks') + tm_layout(frame=F)
+h <- tm_shape(data_proj) + tm_polygons('blockArea', style='hclust') + tm_layout(frame=F)
+b <- tm_shape(data_proj) + tm_polygons('blockArea', style='bclust') + tm_layout(frame=F)
+pdf('test.pdf')
+tmap_arrange(k,j,h,b, nrow=1, ncol=4) # this seemed to work well
+dev.off()
 
 
 ##### 1.3. Data classification #####
