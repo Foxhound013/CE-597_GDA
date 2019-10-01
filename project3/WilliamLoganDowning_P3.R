@@ -230,7 +230,6 @@ my_kmeans <- function(data, k) {
     
     # now, each row has a class from 1 to k assigned to it.
     # group by the class and calculate variances
-    # can replace length with k
     inClass.var = list()
     
     for (i in 1:length(centers)) {
