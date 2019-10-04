@@ -61,67 +61,65 @@ class(tract_proj)
 #     hclust, bclust; keep the number of classes to be the same (usually not more than 6)
 #     for all methods.
 
+# get the population density
+tract_proj$density <- tract_proj$DP0010001/tract_proj$blockArea
+
 # Clustering Mapping Methods
 tmap_mode('plot')
 
-k <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='kmeans', title='Block Area (Km^2)') +
+k <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='kmeans', title='Population per Km^2', border.alpha=.2) +
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
   tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0), 
-            panel.labels='Population Clustered by Kmeans')
+            panel.labels='Population Density Clustered by Kmeans')
 
-j <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='jenks', title='Block Area (Km^2)') + 
+j <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='jenks', title='Population per Km^2', border.alpha=.2) + 
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
   tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Jenks')
+            panel.labels='Population Density Clustered by Jenks')
 
-h <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='hclust', title='Block Area (Km^2)') +
+h <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='hclust', title='Population per Km^2', border.alpha=.2) +
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
   tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Hclust')
+            panel.labels='Population Density Clustered by Hclust')
 
-b <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='bclust', title='Block Area (Km^2)') + 
+b <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='bclust', title='Population per Km^2', border.alpha=.2) + 
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
   tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Bclust')
+            panel.labels='Population Density Clustered by Bclust')
 
-manual <- tm_shape(tract_proj) + 
-  tm_polygons('DP0010001', style='fixed', 
-              breaks=c(0,3000,6000,9000,15000,19000),
-              title='Block Area (Km^2)') +
+
+q <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='quantile', title='Population per Km^2', border.alpha=.2) +
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
   tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Hclust')
+            panel.labels='Population Density Clustered by Quantiles')
 
-q <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='quantile', title='Block Area (Km^2)') +
-  tm_compass(position=c('right', 'bottom'), text.size=1) + 
-  tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
-  tm_layout(frame=T, panel.show=T, main.title.position='center', main.title.size=1,
-            legend.position=c('right', 'bottom'), legend.text.size=1,
-            legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
-            inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Quantiles')
-
-f <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='fisher', title='Block Area (Km^2)') + 
+f <- tm_shape(tract_proj) + 
+  tm_polygons('density', style='fisher', title='Population per Km^2', border.alpha=.2) + 
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=1.5) +
    tm_layout(frame=T, panel.show=T,
@@ -129,11 +127,8 @@ f <- tm_shape(tract_proj) + tm_polygons('DP0010001', style='fisher', title='Bloc
             legend.position=c('right', 'bottom'), legend.text.size=1,
             legend.title.size=1.4, legend.bg.color='white', legend.bg.alpha=.6,
             inner.margins = c(.17, 0, 0, 0),
-            panel.labels='Population Clustered by Fisher')
+            panel.labels='Population Density Clustered by Fisher')
 
-# png('./figures/tracts_builtInClustering2.png', width=1600, height=800)
-# tmap_arrange(k,j,h,b, nrow=1, ncol=4, outer.margins = c(0,0,0,0)) # this seemed to work well
-# dev.off()
 
 png('./figures/builtInClustering1.png', width=713, height=545)
 tmap_arrange(k,j, nrow=1)
@@ -145,41 +140,6 @@ png('./figures/builtInClustering3.png', width=713, height=545)
 tmap_arrange(q,f, nrow=1)
 dev.off()
 
-# Implementing clustering on the west lafayette blocks now, but for block area
-# this was for curiousity's sake.
-wl_k <- tm_shape(wl_blocks) + tm_polygons('blockArea', style='kmeans', title='Block Area (Km^2)') +
-  tm_compass(text.size=1.2) + tm_scale_bar(text.size=1.2, ) + 
-  tm_layout(main.title='Population Clustered by Kmeans', main.title.size=1, 
-            main.title.position='center', frame=FALSE,
-            legend.bg.color='white',  legend.text.size=1.2,
-            legend.bg.alpha=.6)
-
-wl_j <- tm_shape(wl_blocks) + tm_polygons('blockArea', style='jenks', title='Block Area (Km^2)') +
-  tm_layout(main.title='Population Clustered by Jenks', main.title.size=1, 
-            main.title.position='center', frame=FALSE,
-            legend.bg.color='white', legend.text.size=1.2,
-            legend.bg.alpha=.6)
-
-wl_h <- tm_shape(wl_blocks) + tm_polygons('blockArea', style='hclust', title='Block Area (Km^2)') +
-  tm_compass(text.size=1.2) + tm_scale_bar(text.size=1.2, ) + 
-  tm_layout(main.title='Population Clustered by Hclust', main.title.size=1, 
-            main.title.position='center', frame=FALSE,
-            legend.bg.color='white', legend.text.size=1.2,
-            legend.bg.alpha=.6)
-
-wl_b <- tm_shape(wl_blocks) + tm_polygons('blockArea', style='bclust', title='Block Area (Km^2)') +
-  tm_layout(main.title='Population Clustered by Bclust', main.title.size=1, 
-            main.title.position='center', frame=FALSE,
-            legend.bg.color='white', legend.text.size=1.2,
-            legend.bg.alpha=.6)
-
-png('./figures/blocks1_builtInClustering.png', width=1000, height=800)
-tmap_arrange(wl_k, wl_j, nrow=1, ncol=2)
-dev.off()
-
-png('./figures/blocks2_builtInClustering.png', width=1000, height=800)
-tmap_arrange(wl_h, wl_b, nrow=1, ncol=2)
-dev.off()
 
 ##### 1.3. Data classification #####
 #   - Implement your kmeans clustering method to classify the population density into k
@@ -202,6 +162,7 @@ dev.off()
 
 # the data value to be provided should be the item you want classes for
 my_kmeans <- function(data, k) {
+  data <- as.numeric(data) # sanitize the data in the event that it has units
   # first sort the data and get only the unique values
   # you probably don't want the unique values
   # unique values only will mess with the variance probably.
@@ -209,14 +170,11 @@ my_kmeans <- function(data, k) {
   # choose k elements at random, this will only happen once to initialize
   centers <- sample(unique(sorted_vals), k) # use unique to guarantee no overlap
   F_val.old <- -9999 # initializing the old F value to determine when to terminate the loop
+  F.all <- vector() # put in place to print an iterations graphic
   rank.old <- 0 # initializing a container for previous iteration rankings.
   
-  # calculate the overall variance, this won't change.
-  betweenClass.var = var(sorted_vals)
-  
   # In my testing, 100 iterations seemed quick and suffient
-  # using a high number of iterations to help ensure stabilized solution
-  for (j in seq(1, 400)) {
+  for (j in seq(1, 100)) {
     
   
     # need the distances for each k class
@@ -243,10 +201,15 @@ my_kmeans <- function(data, k) {
     }
     
     inClass.var <- sum(unlist(inClass.var))
+    betweenClass.var = var(centers)
     F_val <-  betweenClass.var/inClass.var
     
+    F.all <- append(F.all, F_val)
+    
     # Save the largest version of F and the rankings.
+    # i.e. the jenk's criterion
     if (F_val > F_val.old) {
+      iteration_max <- j
       F_val.old <- F_val
       rank.old <- rank
     }
@@ -256,22 +219,32 @@ my_kmeans <- function(data, k) {
   # break into a 2 column set with min and max values for each
   classBreaks <- data.frame(rank.old) %>% group_by(class) %>% 
     summarize(min_val=min(val), max_val=max(val))
+  
+  classBreaks <- as.vector(list(sort(c(classBreaks$min_val, max(classBreaks$max_val))))[[1]])
+  
+  png('./figures/F_graph.png')
+  plot(F.all, xlab='Iterations', ylab='F Value', main='Variation of F for each Iteration',
+       pch=16, col='deepskyblue3')
+  points(iteration_max, F_val.old, pch=16, col='red')
+  dev.off()
+  
   return(classBreaks)
 }
 
 # my method seems fairly dirty but it does seem to work
 # will need to verify it's validity with ArcGIS
-my_breaks <- my_kmeans(tract_proj$DP0010001, 5)
-my_breaks <- as.vector(list(sort(c(my_breaks$min_val, max(my_breaks$max_val))))[[1]])
+my_breaks <- my_kmeans(tract_proj$density, 5)
+
 
 # Tm will automatically fill in the gaps between the breaks
 # since my algorithm will not ensure that each segment butts up against each other.
 png('./figures/myKmeans.png')
 tm_shape(tract_proj) + 
-  tm_polygons('DP0010001', style='fixed', breaks=my_breaks, title='Population') +
+  tm_polygons('density', style='fixed', breaks=my_breaks, 
+              title='Population per Km^2', border.alpha=.2 ) +
   tm_compass(position=c('right', 'bottom'), text.size=1) + 
   tm_scale_bar(position=c('left', 'bottom'), text.size=.8) +
-  tm_layout(frame=T, panel.show=T, panel.labels='Population Clustered by my Kmeans',
+  tm_layout(frame=T, panel.show=T, panel.labels='Population Density Clustered by my Kmeans',
             legend.bg.color='white', legend.text.size=.8,
             legend.bg.alpha=.6, inner.margins = c(.17, .2, 0, .2))
 dev.off()
