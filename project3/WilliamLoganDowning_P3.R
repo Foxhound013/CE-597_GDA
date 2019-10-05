@@ -13,24 +13,6 @@ library(tidyverse)
 #     sf as a new column
 #   - The new sf file will be your working file
 
-# Load the block data and clip it first.
-blocks <- sf::st_read('./data/raw/tabblock2010_18_pophu', layer='tabblock2010_18_pophu')
-#blocks_proj <- sf::st_transform(blocks, crs=32616)
-# subset blocks to west lafayette.
-wl <- osmdata::getbb('west lafayette, usa')
-# need to create a polygon from the bbox.
-coords <- matrix(c(wl[1,1], wl[2,1], wl[1,1], wl[2,2], wl[1,2], wl[2,2],
-                   wl[1,2], wl[2,1], wl[1,1], wl[2,1]), ncol=2,
-                 byrow=T)
-geoobj <- st_sfc(st_polygon(list(coords)))
-wl_poly <- st_sf(geoobj, crs=st_crs(blocks))
-
-wl_blocks <- st_intersection(blocks, wl_poly)
-wl_blocks <- sf::st_transform(wl_blocks, crs=32616)
-sf::st_crs(wl_blocks)
-wl_blocks$blockArea <- sf::st_area(wl_blocks) %>% set_units(km^2) # set the blockArea
-
-
 tract <- sf::st_read('./data/raw/Tract_2010Census_DP1_IN/utm', layer='tract_in_selected_utm')
 sf::st_crs(tract)
 # epsg code found at https://spatialreference.org/ref/epsg/wgs-84-utm-zone-16n/
@@ -64,8 +46,12 @@ class(tract_proj)
 # get the population density
 tract_proj$density <- tract_proj$DP0010001/tract_proj$blockArea
 
+# write to file
+sf::st_write(tract_proj, dsn='./data/processed', layer='projectedTracts.shp',
+             driver='ESRI Shapefile', delete_layer=TRUE)
+
 # Clustering Mapping Methods
-tmap_mode('plot')
+#tmap_mode('plot')
 
 k <- tm_shape(tract_proj) + 
   tm_polygons('density', style='kmeans', title='Population per Km^2', border.alpha=.2) +
@@ -151,8 +137,8 @@ dev.off()
 # From Wikipedia - Searched Jenks Criterion
 # The Jenks optimization method, also called the Jenks natural breaks classification method, 
 # is a data clustering method designed to determine the best arrangement of values into 
-# different classes. This is done by seeking to minimize each class’s average deviation from 
-# the class mean, while maximizing each class’s deviation from the means of the other groups. 
+# different classes. This is done by seeking to minimize each class average deviation from 
+# the class mean, while maximizing each class deviation from the means of the other groups. 
 # In other words, the method seeks to reduce the variance within classes and maximize the 
 # variance between classes.
 
