@@ -12,8 +12,58 @@ library(tmaptools)
 #   3) do the same with the built-in functions in R by adding another 4 columns
 #   4) evaluate/summarize the differences (histogram, mean, standard deviation etc)
 
+raw_data <- st_read('./data/raw/buildings_shpfile', layer='buildings')
 
+# drop any invalid polygons
+data <- raw_data[which(st_is_valid(raw_data)),]
+# drop empty polygons
+data <- data[which(!st_is_empty(data)),]
 
+# quickly get a view of the data
+tmap_mode('view')
+tm_shape(raw_data) + tm_polygons()
+
+tm_shape(data) + tm_polygons()
+
+# get a quick look at a polygon to understand structure
+tmp <- data$geometry[1][[1]][1] 
+# above, we're requesting the first polygon, the first list of that polygon, and
+# the first batch of data in that list (which happens to be 5 row x 2 column matrix.)
+
+# all of your polygons should be two columns with N number of row.
+
+# Perimeter Calculation
+# Formula: Sum( sqrt( (yi+1 - yi)^2 + (xi+1 - xi)^2) )
+
+# accepts a dataframe but expects a geometry column
+ld_perimeter <- function(data) {
+  perimeters <- list()
+  for (i in data$geometry) {
+    y <- diff(i[[1]][,2])
+    x <- diff(i[[1]][,1])
+    
+    perimeters <- append(perimeters, sum(sqrt(y^2+x^2)))
+  }
+  
+  return(perimeters)
+}
+
+# sapply(data$geometry, function(x) x[[1]])
+
+ld_perimeter(data)
+
+# this is failing on multipolygons ...
+
+# you can add an st_is check to determine if it is a multipolygon
+
+for (i in data$geometry) {
+  print(i[[1]][,1])
+
+}
+i[[1]]
+
+i[[1]][,2]
+i[[1]][[1]]
 
 # 2. Given the WL tweets data of year 2014, make an R program to (use built-in functions, 6pts)
 #
