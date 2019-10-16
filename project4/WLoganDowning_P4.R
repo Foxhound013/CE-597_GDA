@@ -19,6 +19,16 @@ raw_data <- st_read('./data/raw/buildings_shpfile', layer='buildings')
 data <- raw_data[which(st_is_valid(raw_data)),]
 # drop empty polygons
 data <- data[which(!st_is_empty(data)),]
+# drop any buildings that have been razed
+data <- data[is.na(data$YEAR_RAZED),]
+# drop entities that are NA, these tend to be overlapping shapes
+# or what seems to be errors in the data
+data <- data[!is.na(data$Entity),]
+
+# drop out the non-useful columns
+data <- data[,c('Entity', 'Level', 'Layer', 'Elevation', 'BLDG_ABBR', 'BUILDING_N',
+                'OWNER', 'GIS_AREA', 'PERIMETER', 'MAPID', 'Shape_Leng', 'Shape_Area',
+                'YEAR_BUILT', 'geometry')]
 
 # quickly get a view of the data
 tmap_mode('view')
@@ -26,20 +36,13 @@ tm_shape(raw_data) + tm_polygons()
 
 tm_shape(data) + tm_polygons()
 
-# get a quick look at a polygon to understand structure
-tmp <- data$geometry[1][[1]][1] 
-# above, we're requesting the first polygon, the first list of that polygon, and
-# the first batch of data in that list (which happens to be 5 row x 2 column matrix.)
-
-# all of your polygons should be two columns with N number of row.
-
 # Perimeter Calculation
 # Formula: Sum( sqrt( (yi+1 - yi)^2 + (xi+1 - xi)^2) )
 
 # accepts a dataframe but expects a geometry column
 ld_perimeter <- function(data) {
   perimeters <- list()
-
+  
   for (i in data$geometry) {
     # check polygon type
     if (st_is(i,'POLYGON')) {
@@ -70,13 +73,6 @@ summary(data$ld_perim-data$PERIMETER)
 
 # Area Calculation
 # Formula: 1/2 * sum( (xi+1-xi)*(yi+yi+1) )
-
-tmp <- data$geometry
-y <- head(tmp[[1]][[1]][,2], -1) + tail(tmp[[1]][[1]][,2], -1)
-x <- diff(tmp[[1]][[1]][,1])
-
-.5 * sum(y*x)
-st_area(data[1,])
 
 ld_area <- function(data) {
   area <- list()
@@ -110,31 +106,6 @@ summary(data$ld_area - data$Shape_Area)
 # Formulas:
 #   x_bar = 1/(6A) * Sum( (yi+1 - yi) * (xi^2 + xi*xi+1 + xi+1^2) )
 #   y_bar = 1/(6A) * Sum( (xi - xi+1) * (yi^2 + yi*yi+1 + yi+1^2) )
-
-#x_bar
-y <- diff(data$geometry[[1]][[1]][,2])
-x <- head(data$geometry[[1]][[1]][,1], -1)^2 + 
-  head(data$geometry[[1]][[1]][,1], -1)*tail(data$geometry[[1]][[1]][,1], -1) +
-  tail(data$geometry[[1]][[1]][,1], -1)^2
-  
-x_bar <- (1/(6*data$ld_area[1]) * sum(y*x))*-1
-
-
-x <- head(data$geometry[[1]][[1]][,1], -1) - tail(data$geometry[[1]][[1]][,1], -1)
-y <- head(data$geometry[[1]][[1]][,2], -1)^2 +
-  head(data$geometry[[1]][[1]][,2], -1)*tail(data$geometry[[1]][[1]][,2], -1) +
-  tail(data$geometry[[1]][[1]][,2], -1)^2
-
-y_bar <- (1/(6*data$ld_area[1]) * sum(y*x))*-1
-
-st_geometry(tmp) <- st_centroid(data[1,])
-plot(tmp$geometry)
-plot(st_centroid(tmp$geometry), add=T, pch=3)
-tmp$geometry
-pts <- do.call(rbind, st_geometry(data)) 
-# the above line is just to pull the centroid back out of the attributes
-
-rbind(st_geometry(tmp))
 
 # this function will return two columns of x and y centroid values
 # area should be calculated prior to running this function
@@ -170,38 +141,38 @@ ld_centroid <- function(data, area) {
       x_list <- rep(list(NULL),length(data[[i]]))
       y_list <- rep(list(NULL),length(data[[i]]))
       next()
-    #   for (j in 1:length(data[[i]])) {
-    #     #x_bar
-    #     y <- diff(data[[i]][[j]][[1]][,2])
-    #     x <- head(data[[i]][[j]][[1]][,1], -1)^2 + 
-    #       head(data[[i]][[j]][[1]][,1], -1)*tail(data[[i]][[j]][[1]][,1], -1) +
-    #       tail(data[[i]][[j]][[1]][,1], -1)^2
-    #     
-    #     x_bar <- (1/(6*area[i]) * sum(y*x))*-1# this bit isn't technically right.
-    #     # to fix it, it would require tweaking the area function to return the individual
-    #     # areas for each polygon
-    # 
-    #     #y_bar
-    #     x <- head(data[[i]][[j]][[1]][,1], -1) - tail(data[[i]][[j]][[1]][,1], -1)
-    #     y <- head(data[[i]][[j]][[1]][,2], -1)^2 +
-    #       head(data[[i]][[j]][[1]][,2], -1)*tail(data[[i]][[j]][[1]][,2], -1) +
-    #       tail(data[[i]][[j]][[1]][,2], -1)^2
-    #     
-    #     y_bar <- (1/(6*area[i]) * sum(y*x))*-1 # this bit isn't technically right.
-    #     # to fix it, it would require tweaking the area function to return the individual
-    #     # areas for each polygon
-    #     
-    #     # now, you need to store each multipoly's center to a list, for future storage in 
-    #     # the data frame.
-    #     x_list[[j]] <- append(x_list[[j]], x_bar)
-    #     y_list[[j]] <- append(y_list[[j]], y_bar)
-    #   }
-    #   x_list <- sapply(x_list, cbind)
-    #   y_list <- sapply(y_list, cbind)
-    #   
-    #   print(centroids[890:898,])
-    #   centroids[[1]][i][[1]] <- x_list
-    #   centroids[[2]][i][[1]] <- y_list
+      #   for (j in 1:length(data[[i]])) {
+      #     #x_bar
+      #     y <- diff(data[[i]][[j]][[1]][,2])
+      #     x <- head(data[[i]][[j]][[1]][,1], -1)^2 + 
+      #       head(data[[i]][[j]][[1]][,1], -1)*tail(data[[i]][[j]][[1]][,1], -1) +
+      #       tail(data[[i]][[j]][[1]][,1], -1)^2
+      #     
+      #     x_bar <- (1/(6*area[i]) * sum(y*x))*-1# this bit isn't technically right.
+      #     # to fix it, it would require tweaking the area function to return the individual
+      #     # areas for each polygon
+      # 
+      #     #y_bar
+      #     x <- head(data[[i]][[j]][[1]][,1], -1) - tail(data[[i]][[j]][[1]][,1], -1)
+      #     y <- head(data[[i]][[j]][[1]][,2], -1)^2 +
+      #       head(data[[i]][[j]][[1]][,2], -1)*tail(data[[i]][[j]][[1]][,2], -1) +
+      #       tail(data[[i]][[j]][[1]][,2], -1)^2
+      #     
+      #     y_bar <- (1/(6*area[i]) * sum(y*x))*-1 # this bit isn't technically right.
+      #     # to fix it, it would require tweaking the area function to return the individual
+      #     # areas for each polygon
+      #     
+      #     # now, you need to store each multipoly's center to a list, for future storage in 
+      #     # the data frame.
+      #     x_list[[j]] <- append(x_list[[j]], x_bar)
+      #     y_list[[j]] <- append(y_list[[j]], y_bar)
+      #   }
+      #   x_list <- sapply(x_list, cbind)
+      #   y_list <- sapply(y_list, cbind)
+      #   
+      #   print(centroids[890:898,])
+      #   centroids[[1]][i][[1]] <- x_list
+      #   centroids[[2]][i][[1]] <- y_list
     }
   }
   return(centroids)
@@ -219,6 +190,11 @@ pts <- data.frame(st_geometry(data) %>% st_centroid %>% st_coordinates)
 data$builtIn_centroidX <- pts$X
 data$builtIn_centroidY <- pts$Y
 
+# comparing my calculations vs R's built in calculations
+summary(data$ld_perim - as.numeric(data$builtIn_perimeter))
+summary(data$ld_area - as.numeric(data$builtIn_area))
+summary(data$ld_centroid_x - data$builtIn_centroidX)
+summary(data$ld_centroid_y - data$builtIn_centroidY)
 
 
 # 2. Given the WL tweets data of year 2014, make an R program to (use built-in functions, 6pts)
@@ -226,19 +202,62 @@ data$builtIn_centroidY <- pts$Y
 #   1) Find the closest tweets for each building, add the sum (the number of tweets) to that
 #     building
 #   2) For the tweets data frame( layer), associate the closest building ID to each tweet
-#   3) Find the “busiest” buildings in WL (campus)
-#   4) Evaluate/discuss the ‘busiest’ buildings in terms of time period (e.g. day or night etc.)
+#   3) Find the "busiest" buildings in WL (campus)
+#   4) Evaluate/discuss the 'busiest' buildings in terms of time period (e.g. day or night etc.)
 #   5) Show your results with appropriate maps
-#     - Note – if the distance of a tweet to the closest building is too large, you may want
+#     - Note - if the distance of a tweet to the closest building is too large, you may want
 #       to discard that tweet from this building
 #     - For spatial operation command, check
-#       https://r-spatial.github.io/sf/reference/index.html; there is an “Articles” pull down
+#       https://r-spatial.github.io/sf/reference/index.html; there is an "Articles" pull down
 #       button. Also look at https://github.com/rstudio/cheatsheets/blob/master/sf.pdf
-#     - Option – you may download OSM buildings of WL (see my early notes) and use these
+#     - Option - you may download OSM buildings of WL (see my early notes) and use these
 #       verse the one I provided (which has only Purdue buildings)
 
+# st nearest feature should be helfpul
+
+# load the tweet data
+tweets <- read.csv('./data/raw/pu2014.csv', header=T, stringsAsFactors=F)
+tweets <- tweets[,c('epoch', 'longitude', 'latitude', 'user_id', 'source', 'hashtags')]
+
+# tweet_counts <- data.frame(table(tweets$user_id))
+# colnames(tweet_counts) <- c('user_id', 'frequency')
+
+sf_tweets <- st_as_sf(tweets, coords=c('longitude', 'latitude'), crs=4326)
+sf_tweets <- st_transform(sf_tweets, crs=st_crs(data))
+
+# quick look at all of the data together
+#tm_shape(data) + tm_polygons() + tm_shape(sf_tweets) + tm_dots(col='red')
+
+# 1) find the closest tweets for each building
+
+# this works but it is super slow
+#tmp <- st_join(sf_tweets, data[,'BUILDING_N'], join=st_is_within_distance, dist=20)
+
+# buffer the buildings, then you can find tweets that are within those new polygons
+# some tweets will likely be assigned multiple times but this is an uncertainty
+# that I'm willing to accept
+bldBuff <- st_buffer(data, 30)
+BldTweets <- st_join(sf_tweets, bldBuff, join=st_within)
+BldTweets <- BldTweets[!is.na(BldTweets$BUILDING_N),] # drop out values not in buildings
+BldTweetsCount <- data.frame(table(BldTweets$BUILDING_N))
+colnames(BldTweetsCount) <- c('BUILDING_N', 'tweetFrequency')
+
+BldTweets <- merge(data, BldTweetsCount, by='BUILDING_N')
+
+
+# 2: For the tweets data frame( layer), associate the closest building ID to each tweet
+bldAssociation <- st_nearest_feature(sf_tweets, data)
+sf_tweets$buildingRow <- bldAssociation
+sf_tweets$buildingName <- data$BUILDING_N[bldAssociation]
+
+
+# 3: Find the "busiest" buildings in WL (campus)
+topBlds <- BldTweets[order(BldTweets$tweetFrequency, decreasing=T),]
+topBlds <- head(topBlds, 10)
+topBlds <- topBlds[,c('BUILDING_N', 'tweetFrequency')]
+
+# 4: Evaluate/discuss the 'busiest' buildings in terms of time period (e.g. day or night etc.)
 
 
 
-
-
+# 5: Show your results with appropriate maps
