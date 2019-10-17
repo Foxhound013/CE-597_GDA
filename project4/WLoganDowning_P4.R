@@ -30,6 +30,10 @@ data <- data[,c('Entity', 'Level', 'Layer', 'Elevation', 'BLDG_ABBR', 'BUILDING_
                 'OWNER', 'GIS_AREA', 'PERIMETER', 'MAPID', 'Shape_Leng', 'Shape_Area',
                 'YEAR_BUILT', 'geometry')]
 
+# check the crs
+st_crs(data)
+# transverse mercator with NAD83 datum
+
 # quickly get a view of the data
 tmap_mode('view')
 tm_shape(raw_data) + tm_polygons()
@@ -182,13 +186,18 @@ centroid_data <- ld_centroid(data, data$ld_area)
 data$ld_centroid_x <- centroid_data$x_bar
 data$ld_centroid_y <- centroid_data$y_bar
 
-
 # calculate perimeter with inbuilt function
 data$builtIn_perimeter <- st_length(st_cast(data, 'MULTILINESTRING'))
 data$builtIn_area <- st_area(data)
 pts <- data.frame(st_geometry(data) %>% st_centroid %>% st_coordinates)
 data$builtIn_centroidX <- pts$X
 data$builtIn_centroidY <- pts$Y
+
+# round the answers
+data <- data %>% mutate_at(vars('ld_perim', 'ld_area', 'builtIn_perimeter', 'builtIn_area'), 
+                           .funs=list(function(x) round(x,3)))
+data <- data %>% mutate_at(vars('ld_centroid_x', 'ld_centroid_y', 'builtIn_centroidX', 'builtIn_centroidY'), 
+                           .funs=list(function(x) round(x,0)))
 
 # comparing my calculations vs R's built in calculations
 summary(data$ld_perim - as.numeric(data$builtIn_perimeter))
@@ -228,8 +237,7 @@ sf_tweets <- st_transform(sf_tweets, crs=st_crs(data))
 # quick look at all of the data together
 #tm_shape(data) + tm_polygons() + tm_shape(sf_tweets) + tm_dots(col='red')
 
-# 1) find the closest tweets for each building
-
+# 1) Find the closest tweets for each building, add the sum (the number of tweets) to that building
 # this works but it is super slow
 #tmp <- st_join(sf_tweets, data[,'BUILDING_N'], join=st_is_within_distance, dist=20)
 
@@ -244,20 +252,56 @@ colnames(BldTweetsCount) <- c('BUILDING_N', 'tweetFrequency')
 
 BldTweets <- merge(data, BldTweetsCount, by='BUILDING_N')
 
+# Visualize the tweets by building
+tm_shape(BldTweets) + tm_polygons() +
+  tm_shape(BldTweets) + tm_dots(title='Tweet Count', col='tweetFrequency') + 
+  tm_scale_bar()
+  
 
 # 2: For the tweets data frame( layer), associate the closest building ID to each tweet
 bldAssociation <- st_nearest_feature(sf_tweets, data)
 sf_tweets$buildingRow <- bldAssociation
 sf_tweets$buildingName <- data$BUILDING_N[bldAssociation]
 
+# Visualization
+# pick a few buildings close to one another
+tm_shape(data) + tm_polygons()
+# Purdue Memorial Union, Stewart Center, Richard Benbridge Wetherill Lab Of Chemistry,
+
+# The rec Center will be used for the visualization example
+bldSubset <- data[which(data$BUILDING_N=='Purdue Memorial Union' | 
+                               data$BUILDING_N=='Stewart Center' | 
+                               data$BUILDING_N=='Richard Benbridge Wetherill Lab Of Chemistry'),]
+
+bldTweetSubset <- sf_tweets[which(sf_tweets$buildingName=='Purdue Memorial Union' | 
+                                    sf_tweets$buildingName=='Stewart Center' | 
+                                    sf_tweets$buildingName=='Richard Benbridge Wetherill Lab Of Chemistry'),]
+bldTweetSubset$buildingName <- droplevels(bldTweetSubset$buildingName )
+
+tm_shape(bldSubset) + tm_polygons() + 
+  tm_shape(bldTweetSubset) + tm_dots(title='Building', size=.01, col='buildingName') +
+  tm_scale_bar()
+
 
 # 3: Find the "busiest" buildings in WL (campus)
 topBlds <- BldTweets[order(BldTweets$tweetFrequency, decreasing=T),]
-topBlds <- head(topBlds, 10)
-topBlds <- topBlds[,c('BUILDING_N', 'tweetFrequency')]
+topBlds <- head(topBlds, 6)
+topBlds$BUILDING_N <- droplevels(topBlds$BUILDING_N)
+# The rec center is duplicated due to construction, drop it
+topBlds <- topBlds[which(topBlds$Layer != 'BLDG Building Under Construction'),]
+# reset row index
+rownames(topBlds) <- NULL
+
+topBldTweets <- sf_tweets[sf_tweets$buildingName %in% topBlds$BUILDING_N,]
+topBldTweets$buildingName <- droplevels(topBldTweets$buildingName)
+
+tm_shape(topBlds) + tm_polygons(col='blue',border.col='black') + 
+  tm_shape(topBldTweets) + tm_dots(size=0.006, col='buildingName') +
+  tm_view(view.legend.position=c('left','top')) + tm_scale_bar()
 
 # 4: Evaluate/discuss the 'busiest' buildings in terms of time period (e.g. day or night etc.)
 
+# should be able to leverage the epoch data from sf_tweets
 
 
 # 5: Show your results with appropriate maps
