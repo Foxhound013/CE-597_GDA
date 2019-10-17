@@ -3,6 +3,7 @@ library(sf)
 library(tmap)
 library(tmaptools)
 library(rgeos)
+library(lattice)
 
 
 # 1. Given a building shapefile of Purdue campus, make an R program to calculate 
@@ -302,6 +303,19 @@ tm_shape(topBlds) + tm_polygons(col='blue',border.col='black') +
 # 4: Evaluate/discuss the 'busiest' buildings in terms of time period (e.g. day or night etc.)
 
 # should be able to leverage the epoch data from sf_tweets
+sf_tweets$hour <- lubridate::hour(as.POSIXct(sf_tweets$epoch, origin='1970-01-01', tz='UTC'))
+sf_tweets$hours_cut = cut(as.numeric(sf_tweets$hour), breaks = seq(0,24,6), include.lowest=T,
+                       labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
+
+
+tmp <- sf_tweets %>% group_by(hours_cut, buildingName) %>% 
+  mutate(count=n())
+tmp <- data.frame(tmp) # makes it so the geometry column can be dropped out
+tmp <- unique(tmp[,c('buildingName','count', 'hours_cut')])
+
+
+tm_shape(sf_tweets) + tm_dots('hours_cut')
+
 
 
 # 5: Show your results with appropriate maps
