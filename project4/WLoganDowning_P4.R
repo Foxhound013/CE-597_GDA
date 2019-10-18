@@ -3,7 +3,6 @@ library(sf)
 library(tmap)
 library(tmaptools)
 library(rgeos)
-library(lattice)
 
 
 # 1. Given a building shapefile of Purdue campus, make an R program to calculate 
@@ -37,9 +36,9 @@ st_crs(data)
 
 # quickly get a view of the data
 tmap_mode('view')
-tm_shape(raw_data) + tm_polygons()
+tm_shape(raw_data) + tm_polygons() + tm_scale_bar()
 
-tm_shape(data) + tm_polygons()
+tm_shape(data) + tm_polygons() + tm_scale_bar()
 
 # Perimeter Calculation
 # Formula: Sum( sqrt( (yi+1 - yi)^2 + (xi+1 - xi)^2) )
@@ -146,38 +145,6 @@ ld_centroid <- function(data, area) {
       x_list <- rep(list(NULL),length(data[[i]]))
       y_list <- rep(list(NULL),length(data[[i]]))
       next()
-      #   for (j in 1:length(data[[i]])) {
-      #     #x_bar
-      #     y <- diff(data[[i]][[j]][[1]][,2])
-      #     x <- head(data[[i]][[j]][[1]][,1], -1)^2 + 
-      #       head(data[[i]][[j]][[1]][,1], -1)*tail(data[[i]][[j]][[1]][,1], -1) +
-      #       tail(data[[i]][[j]][[1]][,1], -1)^2
-      #     
-      #     x_bar <- (1/(6*area[i]) * sum(y*x))*-1# this bit isn't technically right.
-      #     # to fix it, it would require tweaking the area function to return the individual
-      #     # areas for each polygon
-      # 
-      #     #y_bar
-      #     x <- head(data[[i]][[j]][[1]][,1], -1) - tail(data[[i]][[j]][[1]][,1], -1)
-      #     y <- head(data[[i]][[j]][[1]][,2], -1)^2 +
-      #       head(data[[i]][[j]][[1]][,2], -1)*tail(data[[i]][[j]][[1]][,2], -1) +
-      #       tail(data[[i]][[j]][[1]][,2], -1)^2
-      #     
-      #     y_bar <- (1/(6*area[i]) * sum(y*x))*-1 # this bit isn't technically right.
-      #     # to fix it, it would require tweaking the area function to return the individual
-      #     # areas for each polygon
-      #     
-      #     # now, you need to store each multipoly's center to a list, for future storage in 
-      #     # the data frame.
-      #     x_list[[j]] <- append(x_list[[j]], x_bar)
-      #     y_list[[j]] <- append(y_list[[j]], y_bar)
-      #   }
-      #   x_list <- sapply(x_list, cbind)
-      #   y_list <- sapply(y_list, cbind)
-      #   
-      #   print(centroids[890:898,])
-      #   centroids[[1]][i][[1]] <- x_list
-      #   centroids[[2]][i][[1]] <- y_list
     }
   }
   return(centroids)
@@ -259,6 +226,10 @@ tm_shape(BldTweets) + tm_polygons() +
   tm_scale_bar()
   
 
+
+
+
+
 # 2: For the tweets data frame( layer), associate the closest building ID to each tweet
 bldAssociation <- st_nearest_feature(sf_tweets, data)
 sf_tweets$buildingRow <- bldAssociation
@@ -267,9 +238,8 @@ sf_tweets$buildingName <- data$BUILDING_N[bldAssociation]
 # Visualization
 # pick a few buildings close to one another
 tm_shape(data) + tm_polygons()
-# Purdue Memorial Union, Stewart Center, Richard Benbridge Wetherill Lab Of Chemistry,
-
-# The rec Center will be used for the visualization example
+# Purdue Memorial Union, Stewart Center, Richard Benbridge Wetherill Lab Of Chemistry are 
+# close to one another and should demonstrate this quite well.
 bldSubset <- data[which(data$BUILDING_N=='Purdue Memorial Union' | 
                                data$BUILDING_N=='Stewart Center' | 
                                data$BUILDING_N=='Richard Benbridge Wetherill Lab Of Chemistry'),]
@@ -282,6 +252,10 @@ bldTweetSubset$buildingName <- droplevels(bldTweetSubset$buildingName )
 tm_shape(bldSubset) + tm_polygons() + 
   tm_shape(bldTweetSubset) + tm_dots(title='Building', size=.01, col='buildingName') +
   tm_scale_bar()
+
+
+
+
 
 
 # 3: Find the "busiest" buildings in WL (campus)
@@ -300,22 +274,28 @@ tm_shape(topBlds) + tm_polygons(col='blue',border.col='black') +
   tm_shape(topBldTweets) + tm_dots(size=0.006, col='buildingName') +
   tm_view(view.legend.position=c('left','top')) + tm_scale_bar()
 
+
+
+
+
 # 4: Evaluate/discuss the 'busiest' buildings in terms of time period (e.g. day or night etc.)
 
-# should be able to leverage the epoch data from sf_tweets
+# the most frequented building was the rec Center, so let's pull it out
+
+topBlds <- topBlds[which(topBlds$BUILDING_N == 'Cordova Recreational Sports Center'),]
+topBlds$BUILDING_N <- droplevels(topBlds$BUILDING_N)
+
+# get your tweets categorized by time
 sf_tweets$hour <- lubridate::hour(as.POSIXct(sf_tweets$epoch, origin='1970-01-01', tz='UTC'))
 sf_tweets$hours_cut = cut(as.numeric(sf_tweets$hour), breaks = seq(0,24,6), include.lowest=T,
-                       labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
+                          labels=c('Midnight-6AM', '6AM-12PM', '12PM-6PM', '6PM-Midnight'))
+
+# select tweets for your busiest building
+bldTweetSubset <- sf_tweets[which(sf_tweets$buildingName=='Cordova Recreational Sports Center'),]
+bldTweetSubset$buildingName <- droplevels(bldTweetSubset$buildingName )
 
 
-tmp <- sf_tweets %>% group_by(hours_cut, buildingName) %>% 
-  mutate(count=n())
-tmp <- data.frame(tmp) # makes it so the geometry column can be dropped out
-tmp <- unique(tmp[,c('buildingName','count', 'hours_cut')])
+tm_shape(topBlds) + tm_polygons() + 
+  tm_shape(bldTweetSubset) + tm_dots(title='Time of Day', size=.01, col='hours_cut') +
+  tm_scale_bar()
 
-
-tm_shape(sf_tweets) + tm_dots('hours_cut')
-
-
-
-# 5: Show your results with appropriate maps
