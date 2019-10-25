@@ -1,0 +1,1 @@
+200112071708 139    16     0arcview IN_UTM83 = project(geo_mosaic, #, bilinear, 30.0)

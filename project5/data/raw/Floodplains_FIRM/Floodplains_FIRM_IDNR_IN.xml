@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+<idinfo>
+<citation>
+<citeinfo>
+<origin>Indiana Department of Natural Resources</origin>
+<pubdate>20190122</pubdate>
+<title>
+FLOODPLAINS_FIRM_IDNR_IN.SHP: FIRM Floodplains and Flood Hazard Zones in Indiana (Indiana Department of Natural Resources,
+1:12,000, Polygon Shapefile)
+</title>
+<geoform>Vector digital data</geoform>
+<pubinfo>
+<pubplace>Indianapolis, Indiana</pubplace>
+<publish>Indiana Department of Natural Resources</publish>
+</pubinfo>
+<othercit>
+Note: This data set was provided to personnel of Indiana Geological and Water Survey (IGS) on October 8, 2004 by Indiana
+Department of Natural Resources personnel. An updated data set was received on May 7, 2012, June 15, 2012, March 26, 2013,
+February 10, 2014, May 19, 2015, June 16, 2016, April 20, 2017, August 16, 2018, and January 22, 2019.
+
+At the request of IDNR personnel, this metadata and associated GIS layer were renamed to &quot;Floodplains_FIRM_IDNR_IN&quot; on
+June 15, 2012 and the naming convention has been carried forward for all subsequent updates.
+
+Please visit the following IDNR Web sites and other online resources for more information about floodplains in Indiana:
+
+1. Indiana Floodplain Mapping - https://www.in.gov/dnr/water/5647.htm
+
+Web site outlining the Engineering Service Center of the Indiana Department of Natural Resources,
+Division of Water, which provides engineering and technical support in support of Floodplain
+Management in Indiana. Contains more &quot;Indiana Floodplain Mapping Quick Links.&quot;
+
+2. Indiana Floodplain Information Portal (INFIP) - https://dnrmaps.dnr.in.gov/appsphp/fdms/
+
+INFIP is a mapping application that provides floodplain information for waterways to help citizens
+determine flood risk in an effort to minimized flood damage. Users can search for locations by
+address, search county-based flood insurance studies, or use the eFARA Wizard to request
+formal Floodplain Analysis and Regulatory Assessments (FARA). Each FARA provides floodplain
+information and the Base Flood Elevation (BFE) for a specific point of interest.
+
+3. Indiana DNR Zone A Floodplain Mapping Project - https://indnr.maps.arcgis.com/apps/MapSeries/index.html?appid=48665e0948b04b398fbc07b8ea1cf232
+
+An IDNR ArcGIS Online Story Map that provides information about the mapping project, and the role
+the IDNR, Division of Water fulfills in producing detailed, model-backed floodplain information
+for every major river in Indiana for Flood Insurance Rate Maps (FIRMs), published by FEMA. The
+INFIP application is also embedded in this story map.
+
+4. General Guidelines for the Hydrologic-Hydraulic Assessment of Floodplains in Indiana -  https://www.in.gov/dnr/water/5710.htm
+
+Guidelines created to assist the floodplain management community in establishing base flood
+elevations and floodway limits and in evaluating projects in accordance with the Indiana Flood
+Control Act and the National Flood Insurance Program. The guidelines detail methods acceptable
+to both the Indiana Department of Natural Resources (IDNR) and the Federal Emergency Management
+Agency (FEMA) with respect to hydrologic and hydraulic modeling and floodplain mapping. Also
+included in this guide are recommendations on presenting results of a floodplain study and other
+useful reference material.
+
+5. Floodplain Management &amp; Homeowner Information - https://www.in.gov/dnr/water/5084.htm
+
+Web site containing numerous links to online resources for community officials and homeowners.
+
+6. FEMA Flood Map Service Center - https://msc.fema.gov/portal/home
+
+The FEMA Flood Map Service Center (MSC) is the official public source for flood hazard
+information produced in support of the National Flood Insurance Program (NFIP). Use the
+MSC to find your official flood map, access a range of other flood hazard products, and
+take advantage of tools for better understanding flood risk.
+</othercit>
+<onlink>https://maps.indiana.edu/layerGallery.html?category=Floodplains</onlink>
+<onlink>https://maps.indiana.edu/download/Environment/Managed_Lands_IDNR.zip</onlink>
+<onlink>https://maps.indiana.edu/metadata/Hydrology/Floodplains_FIRM.html</onlink>
+<onlink>https://maps.indiana.edu/metadata/Hydrology/Floodplains_FIRM.xml</onlink>
+<onlink>https://maps.indiana.edu/arcgis/rest/services/Hydrology/Floodplains_FIRM/MapServer</onlink>
+<onlink>https://indianamap.maps.arcgis.com/home/item.html?id=e54d6759b9db45b59c9734cdd83ae624</onlink>
+<onlink>https://indianamap.maps.arcgis.com/home/webmap/viewer.html?useExisting=1&amp;layers=e54d6759b9db45b59c9734cdd83ae624</onlink>
+</citeinfo>
+</citation>
+<descript>
+<abstract>
+This polygon layer represents floodplains created from FEMA Flood Rate Insurance Maps (FIRM). The layer is symbolized to show the
+following flood hazard primary risk classifications using the &quot;Unique Values, Many Fields&quot; option, using the attribute fields
+named &quot;FLD_ZONE&quot; and &quot;ZONE_SUBTY&quot;:
+
+Flood Hazard Primary Risk Classification								FLD_ZONE/ZONE_SUBTY field values
+
+------------------------------------------------------------			---------------------------------------------------
+
+&quot;Floodways&quot; 															- (AE/FLOODWAY)
+
+&quot;1 % Annual Chance Flood Hazard&quot; (aka 100-year flood zone) 			- (A/&apos;null&apos;, AE/&apos;null&apos;, AH/&apos;null&apos;, and AO/&apos;null&apos;)
+
+&quot;0.2 % Annual Chance Flood Hazard&quot; (aka 500-year Flood Zone) 			- (X/0.2 PCT ANNUAL CHANCE FLOOD HAZARD)
+
+&quot;0.2 % Annual Chance, Protected by Levee&quot; 							- (X/AREA WITH REDUCED FLOOD RISK DUE TO LEVEE)
+
+IDNR documentation states -
+
+“This database is an interim version of the Digital Flood Insurance Rate Map (DFIRM) Database.  It does
+not fully meet all DFIRM specifications as found in “Guidelines and Specifications for Flood Hazard Mapping
+Partners, Appendix L: Guidance for Preparing Draft Digital Data and DFIRM Database. The DFIRM depicts flood
+risk information and supporting data used to develop the risk data. For flood insurance rating purposes,
+flood insurance zone designations are assigned to a community based on the results of the engineering analyses.”
+
+&quot;The DFIRM Database is derived from Flood Insurance Studies (FISs), previously published Flood Insurance Rate
+Maps (FIRMs), flood hazard analyses performed in support of the FISs and FIRMs, and new mapping data, where
+available. The FISs and FIRMs are published by the Federal Emergency Management Agency (FEMA). The
+specifications for the horizontal control of DFIRM data files are consistent with those required for mapping
+at a scale of 1:12,000. Last updated 12/14/18.&quot;
+</abstract>
+<purpose>
+IDNR documentation states –
+
+&quot;The purpose of this interim product is to provide much of the same information as the paper FIRM while
+moving toward compliance with the specifications found in &quot;Guidelines and Specifications for Flood Hazard
+Mapping Partners, Appendix L: Guidance for Preparing Draft Digital Data and DFIRM Database&quot;. The FIRM is
+the basis for floodplain management, mitigation, and insurance activities for the National Flood Insurance
+Program (NFIP). Insurance applications include enforcement of the mandatory purchase requirement of the
+Flood Disaster Protection Act, which &quot;... requires the purchase of flood insurance by property owners who
+are being assisted by Federal programs or by Federally supervised, regulated or insured agencies or
+institutions in the acquisition or improvement of land facilities located or to be located in identified
+areas having special flood hazards,&quot; Section 2(b) (4) of the Flood Disaster Protection Act of 1973. In
+addition to the identification of Special Flood Hazard Areas (SFHAs), the risk zones shown on the FIRMs
+are the basis for the establishment of premium rates for flood coverage offered through the NFIP. The
+DFIRM Database presents the flood risk information depicted on the FIRM in a digital format suitable for
+use in electronic mapping applications. The DFIRM database is a subset of the Digital FIS database that
+serves to archive the information collected during the FIS.”
+</purpose>
+</descript>
+<timeperd>
+<timeinfo>
+<sngdate>
+<caldate>20190122</caldate>
+</sngdate>
+</timeinfo>
+<current>Publication Date</current>
+</timeperd>
+<status>
+<progress>In work</progress>
+<update>Irregular</update>
+</status>
+<spdom>
+<bounding>
+<westbc>-88.1607</westbc>
+<eastbc>-84.6882</eastbc>
+<northbc>41.7753</northbc>
+<southbc>37.7554</southbc>
+</bounding>
+</spdom>
+<keywords>
+<theme>
+<themekt>ISO 19115 Topic Category</themekt>
+<themekey>inlandWaters</themekey>
+<themekey>environment</themekey>
+</theme>
+<theme>
+<themekt>None</themekt>
+<themekey>FEMA Flood Hazard Zone</themekey>
+<themekey>Federal Emergency Management Agency (FEMA)</themekey>
+<themekey>Indiana Department of Natural Resources (IDNR)</themekey>
+<themekey>special flood hazard area (SFHA)</themekey>
+<themekey>riverine flooding</themekey>
+<themekey>NFIP</themekey>
+<themekey>base flood elevation</themekey>
+<themekey>Flood Insurance Rate Map (FIRM)</themekey>
+<themekey>Digital flood insurance rate map database (DFIRM)</themekey>
+<themekey>floodway</themekey>
+<themekey>floodplain</themekey>
+<themekey>stream</themekey>
+<themekey>surface water</themekey>
+<themekey>flood event</themekey>
+<themekey>flood risk</themekey>
+<themekey>flood</themekey>
+</theme>
+<place>
+<placekt>None</placekt>
+<placekey>Indiana</placekey>
+<placekey>Adams County</placekey>
+<placekey>Bartholomew County</placekey>
+<placekey>Benton County</placekey>
+<placekey>Blackford County</placekey>
+<placekey>Boone County</placekey>
+<placekey>Brown County</placekey>
+<placekey>Carroll County</placekey>
+<placekey>Cass County</placekey>
+<placekey>Clark County</placekey>
+<placekey>Clay County</placekey>
+<placekey>Clinton County</placekey>
+<placekey>Crawford County</placekey>
+<placekey>Daviess County</placekey>
+<placekey>Dearborn County</placekey>
+<placekey>Decatur County</placekey>
+<placekey>Delaware County</placekey>
+<placekey>Dubois County</placekey>
+<placekey>Elkhart County</placekey>
+<placekey>Fayette County</placekey>
+<placekey>Floyd County</placekey>
+<placekey>Fountain County</placekey>
+<placekey>Franklin County</placekey>
+<placekey>Fulton County</placekey>
+<placekey>Gibson County</placekey>
+<placekey>Grant County</placekey>
+<placekey>Greene County</placekey>
+<placekey>Hamilton County</placekey>
+<placekey>Hancock County</placekey>
+<placekey>Harrison County</placekey>
+<placekey>Hendricks County</placekey>
+<placekey>Henry County</placekey>
+<placekey>Howard County</placekey>
+<placekey>Huntington County</placekey>
+<placekey>Jackson County</placekey>
+<placekey>Jasper County</placekey>
+<placekey>Jay County</placekey>
+<placekey>Jefferson County</placekey>
+<placekey>Jennings County</placekey>
+<placekey>Knox County</placekey>
+<placekey>Kosciusko County</placekey>
+<placekey>Lagrange County</placekey>
+<placekey>LaPorte County</placekey>
+<placekey>Lawrence County</placekey>
+<placekey>Madison County</placekey>
+<placekey>Marshall County</placekey>
+<placekey>Martin County</placekey>
+<placekey>Miami County</placekey>
+<placekey>Monroe County</placekey>
+<placekey>Montgomery County</placekey>
+<placekey>Morgan County</placekey>
+<placekey>Newton County</placekey>
+<placekey>Noble County</placekey>
+<placekey>Ohio County</placekey>
+<placekey>Orange County</placekey>
+<placekey>Owen County</placekey>
+<placekey>Parke County</placekey>
+<placekey>Perry County</placekey>
+<placekey>Pike County</placekey>
+<placekey>Porter County</placekey>
+<placekey>Posey County</placekey>
+<placekey>Pulaski County</placekey>
+<placekey>Putnam County</placekey>
+<placekey>Randolph County</placekey>
+<placekey>Ripley County</placekey>
+<placekey>Rush County</placekey>
+<placekey>Scott County</placekey>
+<placekey>Shelby County</placekey>
+<placekey>Spencer County</placekey>
+<placekey>Starke County</placekey>
+<placekey>Steuben County</placekey>
+<placekey>St Joseph County</placekey>
+<placekey>Sullivan County</placekey>
+<placekey>Switzerland County</placekey>
+<placekey>Tippecanoe County</placekey>
+<placekey>Tipton County</placekey>
+<placekey>Union County</placekey>
+<placekey>Vermillion County</placekey>
+<placekey>Vigo County</placekey>
+<placekey>Wabash County</placekey>
+<placekey>Warren County</placekey>
+<placekey>Warrick County</placekey>
+<placekey>Washington County</placekey>
+<placekey>Wayne County</placekey>
+<placekey>Wells County</placekey>
+<placekey>White County</placekey>
+<placekey>Whitley County</placekey>
+</place>
+</keywords>
+<accconst>
+This file is available to anyone, but access may be contingent on written request, specific terms relevant to the agency or person
+making the request, and (or) current freedom of information statutes in the state of Indiana.
+</accconst>
+<useconst>
+IDNR documentation states –
+
+“This database is an interim version of the Digital Flood Insurance Rate Map (DFIRM) Database. It does not fully meet all DFIRM
+specifications as found in “Guidelines and Specifications for Flood Hazard Mapping Partners, Appendix L: Guidance for Preparing
+Draft Digital Data and DFIRM Database”.
+
+&quot;The hardcopy FIRM and DFIRM and the accompanying FISs are the official designation of SFHAs and Base Flood Elevations (BFEs) for
+the NFIP. For the purposes of the NFIP, changes to the flood risk information published by FEMA may only be performed by FEMA and
+through the mechanisms established in the NFIP regulations (44 CFR Parts 59-78). These digital data are produced in conjunction
+with the hardcopy FIRMs and generally match the hardcopy map exactly. However the hardcopy flood maps and flood profiles are the
+authoritative documents for the NFIP.”
+
+INDIANA GEOLOGICAL AND WATER SURVEY DATA DISCLAIMER - This data set is provided by Indiana University, Indiana Geological and Water Survey,
+and contains data believed to be accurate; however, a degree of error is inherent in all data. This product is distributed &quot;AS-IS&quot; without
+warranties of any kind, either expressed or implied, including but not limited to warranties of suitability of a particular purpose or use.
+No attempt has been made in either the designed format or production of these data to define the limits or jurisdiction of any federal, state,
+or local government. These data are intended for use only at the published scale or smaller and are for reference purposes only. They are not
+to be construed as a legal document or survey instrument. A detailed on-the-ground survey and historical analysis of a single site may differ
+from these data.
+
+CREDIT - It is requested that the Indiana Geological and Water Survey be cited in any products generated from this data. The
+following source citation should be included: [FLOODPLAINS_FIRM_IDNR_IN.SHP: Floodplains and Flood Hazard Zones in Indiana, (Indiana
+Department of Natural Resources, 1:12,000, Polygon Shapefile), 20190122].
+</useconst>
+<ptcontac>
+<cntinfo>
+<cntorgp>
+<cntorg>Indiana Department of Natural Resources</cntorg>
+<cntper>Michael P. Martin</cntper>
+</cntorgp>
+<cntpos>Agency GIS Coordinator</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>402 W. Washington Street, Room 280</address>
+<city>Indianapolis</city>
+<state>Indiana</state>
+<postal>46204</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>317-232-4068</cntvoice>
+<cntfax>317-233-4648</cntfax>
+<cntemail>mmartin@dnr.in.us</cntemail>
+<hours>0800 to 1630 Eastern Standard Time</hours>
+</cntinfo>
+</ptcontac>
+<native>Microsoft Windows 7 Enterprise, Service Pack 1; ESRI ArcCatalog 10.6, Approximately 541 Mb</native>
+</idinfo>
+<dataqual>
+<attracc>
+<attraccr>
+Empty fields are present within the data table but have been left intact in anticipation of updates as this digital data is improved
+to FEMA DFIRM standards.
+
+IDNR documentation states –
+
+“The DFIRM Database consists of countywide vector files and associated attributes produced in conjunction with the hard
+copy FEMAFIRM. The published effective FIRM and DFIRM maps are issued as the official designation of the SFHAs. As such
+they are adopted by local communities nd form the basis for administration of the NFIP. For these purposes they are
+authoritative. Provisions exist in the regulations for public review, appeals and corrections of the flood risk information
+shown to better match real world conditions. As with any engineering analysis of this type, variation from the estimated
+flood heights and floodplain boundaries is possible. Details of FEMA&apos;s requirements for the FISs and flood mapping process
+that produces these data are available in the Guidelines and Specifications for Flood Hazard Mapping Partners. Attribute accuracy
+was tested by manual comparison of source graphics with hardcopy plots and a symbolized display on an interactive computer
+graphic system. Independent quality control testing of FEMA’s DFIRM database was also performed.”
+
+To obtain more detailed information in areas where Base Flood Elevations (BFEs) and/or floodways have been determined, users are
+encouraged to consult the Flood Profiles and Floodway Data and/or Summary of Stillwater Elevations tables contained within the FIS
+report that accompanies this DFIRM database. Flood elevation data presented in the FIS report must be used in conjunction with the
+FIRM for purposes of construction and/or floodplain management.”
+</attraccr>
+</attracc>
+<logic>
+IDNR documentation states –
+
+“When FEMA revises an FIS, adjacent studies are checked to ensure agreement between flood elevations at the boundaries. Likewise flood
+elevations at the confluence of streams studied independently are checked to ensure agreement at the confluence. The FIRM and the FIS
+are developed together and care is taken to ensure that the elevations and other features shown on the flood profiles in the FIS agree
+with the information shown on the FIRM. However, the elevations as shown on the FIRM are rounded whole-foot elevations. They must be shown
+so that a profile recreated from the elevations on the FIRM will match the FIS profiles within one half of one foot.”
+</logic>
+<complete>
+IDNR documentation states –
+
+“Data contained in the DFIRM Database files reflect the content of the source materials. Features may have been eliminated or generalized on
+the source graphic, due to scale and legibility constraints. With new mapping, FEMA plans to maintain full detail in the spatial data it produces.
+However, older information is often transferred from existing maps where some generalization has taken place. Flood risk data are developed for
+communities participating in the NFIP for use in insurance rating and for floodplain management. Flood hazard areas are determined using statistical
+analyses of records of river flow, storm tides, and rainfall; information obtained through consultation with the communities; floodplain topographic
+surveys; and hydrological and hydraulic analysis. Both detailed and approximate analyses are employed. Generally, detailed analyses are used
+to generate flood risk data only for developed or developing areas of communities. For areas where little or no development is expected to
+occur, FEMA uses approximate analyses to generate flood risk data. Typically, only drainage areas that are greater than one square mile are
+studied.”
+</complete>
+<posacc>
+<horizpa>
+<horizpar>
+IDNR documentation states –
+
+“The DFIRM Database consists of countywide vector files and associated attributes produced in conjunction with the hardcopy FEMA FIRM. As with
+any engineering analysis of this type, variation from the estimated flood heights and floodplain boundaries is possible. Details of FEMA&apos;s
+requirements for the FISs and flood mapping process that produces these data are available in the Guidelines and Specifications for Flood Hazard
+Mapping Partners. Horizontal accuracy was tested by manual comparison of source graphics with hardcopy plots and a symbolized display on an
+interactive computer graphic system. Independent quality control testing of FEMA’s DFIRM database was also performed.”
+
+The specifications for the horizontal control of DFIRM data files are consistent with those required for mapping at a scale of 1:12,000.”
+</horizpar>
+</horizpa>
+<vertacc>
+<vertaccr>
+IDNR documentation states -
+
+“The DFIRM Database consists of countywide vector files and associated attributes produced in conjunction with the hardcopy FEMA FIRM. As with
+any engineering analysis of this type, variation from the estimated flood heights and floodplain boundaries is possible. Details of FEMA&apos;s
+requirements for the FISs and flood mapping process that produces these data are available in the Guidelines and Specifications for Flood Hazard
+Mapping Partners.”
+
+Independent quality control testing of FEMA’s DFIRM database was also performed.”
+</vertaccr>
+</vertacc>
+</posacc>
+<lineage>
+<srcinfo>
+<srccite>
+<citeinfo>
+<origin>Federal Emergency Management Agency</origin>
+<pubdate>Unknown</pubdate>
+<title>Flood Insurance Rate Maps, Indiana Counties, USA</title>
+<geoform>Map</geoform>
+<pubinfo>
+<pubplace>Washington, DC</pubplace>
+<publish>Federal Emergency Management Agency</publish>
+</pubinfo>
+</citeinfo>
+</srccite>
+<typesrc>Paper</typesrc>
+<srctime>
+<timeinfo>
+<sngdate>
+<caldate>Unknown</caldate>
+</sngdate>
+</timeinfo>
+<srccurr>Publication date</srccurr>
+</srctime>
+<srccitea>FIRM</srccitea>
+<srccontr>Spatial and attribute information, floodplain widths, BFEs, Cross Sections, floodplain location.</srccontr>
+</srcinfo>
+<srcinfo>
+<srccite>
+<citeinfo>
+<origin>Indiana Department of Natural Resources</origin>
+<pubdate>20190122</pubdate>
+<title>IDNR_DATA_190122.GDB - (Esri point feature class named &quot;FloodHazard_DNR_Water_IN_190122&quot;)</title>
+<geoform>Vector digital data</geoform>
+<pubinfo>
+<pubplace>Indianapolis, Indiana</pubplace>
+<publish>Indiana Department of Natural Resources</publish>
+</pubinfo>
+<othercit>
+IDNR documentation states –
+
+“This database is an interim version of the Digital Flood Insurance Rate Map (DFIRM) Database. It does not fully meet all DFIRM
+specifications as found in “Guidelines and Specifications for Flood Hazard Mapping Partners, Appendix L: Guidance for Preparing Draft
+Digital Data and DFIRM Database.”
+</othercit>
+<onlink>http://www.in.gov/dnr/water/surface_water/hydro_hydraulic/flood_maps/index.html</onlink>
+</citeinfo>
+</srccite>
+<srcscale>12,000</srcscale>
+<typesrc>Online</typesrc>
+<srctime>
+<timeinfo>
+<sngdate>
+<caldate>20190122</caldate>
+</sngdate>
+</timeinfo>
+<srccurr>Publication date</srccurr>
+</srctime>
+<srccitea>IDNR_DATA_190122.GDB</srccitea>
+<srccontr>Floodplain and Flood Hazard areas for Indiana (Esri File Geodatabase format)</srccontr>
+</srcinfo>
+<procstep>
+<procdesc>
+No process information regarding the original shapefile creation from FIRM maps was provided in the source documentation. Information
+may be obtained from FEMA guidelines on creating DFIRMs avaialable online. Data creator must be contacted for inquiry.
+</procdesc>
+<srcused>FIRM</srcused>
+<procdate>20040901</procdate>
+<srcprod>DFIRM Floodhaz</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>David B. Knipe, PE, CFM</cntper>
+<cntorg>Indiana Department of Natural Resources, Division of Water</cntorg>
+</cntperp>
+<cntpos>Engineering Section Manager (Central)</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>402 W Washington St., Rm. W264</address>
+<city>Indianapolis</city>
+<state>Indiana</state>
+<postal>46204</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>877-928-3755</cntvoice>
+<cntfax>317-233-4579</cntfax>
+<cntemail>dknipe@dnr.in.gov</cntemail>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+All available DFIRM zip files were downloaded from the IDNR Web site URL:
+
+http://www.in.gov/dnr/water/surface_water/hydro_hydraulic/flood_maps/index.html
+
+Zip files were extracted and each county’s, “S_Fld_Haz_Ar” shapefile was added to an ESRI ArcView 3.2 project. Geoprocessing was
+used to merge the 83 county files together to form a single, in work, statewide file. The “in work” designation reflects the
+interim nature of these files and the absence of 9 counties which have not yet been published.
+</procdesc>
+<srcused>DFIRM Floodhaz</srcused>
+<procdate>20041008</procdate>
+<srcprod>FLOODPLAINS_DFIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Cinda Bonds</cntper>
+<cntorg>Bernardin-Lochmueller and Associates</cntorg>
+</cntperp>
+<cntpos>Environmental Biologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>6200 Vogel Road</address>
+<city>Evansville</city>
+<state>Indiana</state>
+<postal>47715</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812-479-6200</cntvoice>
+<cntfax>
+812-479-6262
+Contact_Website: www.blainc.com
+</cntfax>
+<hours>0800-1700 CST</hours>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Data was updated by merging newly completed dfirm files for Adams, Grant, and Hamilton counties downloaded from the DFIRM website. Metadata
+was updated as necessary.
+</procdesc>
+<srcused>DFIRM Floodhaz</srcused>
+<procdate>20120507</procdate>
+<srcprod>FLOODPLAINS_DFIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Cinda Bonds</cntper>
+<cntorg>Bernardin-Lochmueller and Associates</cntorg>
+</cntperp>
+<cntpos>Environmental Biologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>6200 Vogel Road</address>
+<city>Evansville</city>
+<state>Indiana</state>
+<postal>47715</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812-479-6200</cntvoice>
+<cntfax>
+812-479-6262
+Contact_Website: www.blainc.com
+</cntfax>
+<hours>0800-1700 CST</hours>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological a nd Water Survey (IGWS) received an updated file geodatabase titled &quot;DNR_FLOOD.GDB&quot; from Michael P.
+Martin (IDNR, DOR) on May 2, 2012. DNR_FLOOD.GDB contains a polyline feature class named &quot;FLOODHAZARD_DNR_WATER_120502,&quot; in UTM zone 16,
+NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_DFIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The metadata
+file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>DNR_FLOOD.GDB and FLOODHAZARD_DNR_WATER_120502 (polygon feature class)</srcused>
+<procdate>20120502</procdate>
+<srcprod>FLOODPLAINS_DFIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) renamed  the data layer to &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow a request of the
+data stewards at the Indiana Department of Natural Resources (IDNR). The metadata file was then updated to reflect the renamed data layer.
+</procdesc>
+<srcused>FLOODPLAINS_DFIRM_IDNR_IN.SHP</srcused>
+<procdate>20120615</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;DNR_FLOOD.GDB&quot; from Michael P.
+Martin (IDNR, DOR) on March 26, 2013. DNR_FLOOD.GDB contains a polyline feature class named &quot;FLOODHAZARD_DNR_WATER_130326,&quot; in UTM zone 16,
+NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The metadata
+file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>DNR_FLOOD.GDB and FLOODHAZARD_DNR_WATER_130326 (polygon feature class)</srcused>
+<procdate>20130326</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;DNR_DataUpdate_FHA_140207.gdb&quot; from Michael P.
+Martin (IDNR, DOR) on February 10, 2014. DNR_DataUpdate_FHA_140207.gdb contains a polyline feature class named &quot;FLOODHAZARD_DNR_WATER_140207,&quot;
+in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The
+associated metadata file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>DNR_DataUpdate_FHA_140207.gdb and FLOODHAZARD_DNR_WATER_140207 (polygon feature class)</srcused>
+<procdate>20140210</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;DNR_DataUpdate_FHA_150519.gdb&quot; from Michael P.
+Martin (IDNR, DOR) on May 19, 2015. DNR_DataUpdate_FHA_150519.gdb contains a polyline feature class named &quot;FLOODHAZARD_DNR_WATER_150519,&quot;
+in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The
+associated metadata file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>DNR_DataUpdate_FHA_150519.gdb and FLOODHAZARD_DNR_WATER_150519 (polygon feature class)</srcused>
+<procdate>20150519</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;DNR_DataUpdate_FHA_160608.gdb&quot; from Michael P.
+Martin (IDNR, DOR) on June 16, 2016. DNR_DataUpdate_FHA_160608.gdb contains a polyline feature class named &quot;FLOODHAZARD_DNR_WATER_160608,&quot;
+in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The
+associated metadata file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>DNR_DataUpdate_FHA_160608.gdb and FLOODHAZARD_DNR_WATER_160608 (polygon feature class)</srcused>
+<procdate>20160616</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;IDNR_DATA_170419.GDB&quot; from Michael P.
+Martin (IDNR, DOR) on April 20, 2017. FloodHazard_DNR_Water_IN_170320 contains a polyline feature class named &quot;FloodHazard_DNR_Water_IN_170320,&quot;
+in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The
+associated metadata file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>FloodHazard_DNR_Water_IN_170320 and FloodHazard_DNR_Water_IN_170320 (polygon feature class)</srcused>
+<procdate>20170420</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;IDNR_DATA_180816.GDB&quot; from Michael P.
+Martin (IDNR, DOR) on August 16, 2018. FloodHazard_DNR_Water_IN_180816 contains a polyline feature class named &quot;FloodHazard_DNR_Water_IN_180816,&quot;
+in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot; to follow IGS naming conventions. The
+associated metadata file was then updated to reflect the latest enhancements of the updated information.
+</procdesc>
+<srcused>FloodHazard_DNR_Water_IN_180816 (polygon feature class)</srcused>
+<procdate>20180816</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+Personnel of the Indiana Geological and Water Survey (IGWS) received an updated file geodatabase titled &quot;IDNR_DATA_190122.GDB&quot; from
+Michael P. Martin (IDNR, DOR) on January 22, 2019. FloodHazard_DNR_Water_IN_190122 contains a polyline feature class named
+&quot;FloodHazard_DNR_Water_IN_190122,&quot; in UTM zone 16, NAD83 coordinates. The feature class was then renamed &quot;FLOODPLAINS_FIRM_IDNR_IN.SHP&quot;
+to follow IGS naming conventions. The associated metadata file was then updated to reflect the latest enhancements of the
+updated information.
+</procdesc>
+<srcused>FloodHazard_DNR_Water_IN_190122 (polygon feature class)</srcused>
+<procdate>20190122</procdate>
+<srcprod>FLOODPLAINS_FIRM_IDNR_IN.SHP</srcprod>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+<procstep>
+<procdesc>
+This metadata was pre-parsed and parsed using CNS (Chew and Spit v 2.6.1) and MP (Metadata Parser v 2.7.1) software written
+by Peter N. Schweitzer (United States Geological Survey).  The errors generated by MP were all addressed and corrected, except
+that no values were assigned to &quot;Abscissa_Resolution&quot; and &quot;Ordinate_Resolution.&quot;
+</procdesc>
+<procdate>20190222</procdate>
+<proccont>
+<cntinfo>
+<cntperp>
+<cntper>Chris Dintaman</cntper>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+</cntperp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</proccont>
+</procstep>
+</lineage>
+</dataqual>
+<spdoinfo>
+<indspref>Indiana</indspref>
+<direct>Vector</direct>
+<ptvctinf>
+<sdtsterm>
+<sdtstype>GT-polygon composed of chains</sdtstype>
+<ptvctcnt>55381</ptvctcnt>
+</sdtsterm>
+</ptvctinf>
+</spdoinfo>
+<spref>
+<horizsys>
+<planar>
+<gridsys>
+<gridsysn>Universal Transverse Mercator</gridsysn>
+<utm>
+<utmzone>16</utmzone>
+<transmer>
+<sfctrmer>0.999600</sfctrmer>
+<longcm>-87.000000</longcm>
+<latprjo>0.000000</latprjo>
+<feast>500000.000000</feast>
+<fnorth>0.000000</fnorth>
+</transmer>
+</utm>
+</gridsys>
+<planci>
+<plance>Row and column</plance>
+<coordrep>
+<absres>0.001024</absres>
+<ordres>0.001024</ordres>
+</coordrep>
+<plandu>Meters</plandu>
+</planci>
+</planar>
+<geodetic>
+<horizdn>North American Datum of 1983</horizdn>
+<ellips>GRS 80</ellips>
+<semiaxis>6378137.0000000</semiaxis>
+<denflat>298.26</denflat>
+</geodetic>
+</horizsys>
+</spref>
+<eainfo>
+<detailed>
+<enttyp>
+<enttypl>FLOODPLAIN_FIRM_IDNR_IN.DBF</enttypl>
+<enttypd>Shapefile attributes table</enttypd>
+<enttypds>None</enttypds>
+</enttyp>
+<attr>
+<attrlabl>DFIRM_ID</attrlabl>
+<attrdef>Primary key field related to DFIRM; first two digits are the county FIPS number</attrdef>
+<attrdefs>IDNR</attrdefs>
+<attrdomv>
+<udom>Character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>VERSION_ID</attrlabl>
+<attrdef>Identification number for the current version</attrdef>
+<attrdefs>IDNR</attrdefs>
+<attrdomv>
+<udom>Character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Fld_ar_id</attrlabl>
+<attrdef>Primary key field; first two digits are the county FIPS number</attrdef>
+<attrdefs>IDNR</attrdefs>
+<attrdomv>
+<udom>Character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Fld_zone</attrlabl>
+<attrdef>Flood zone designations used by FEMA to designate the SFHAs and for insurance ratings</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<edom>
+<edomv>A</edomv>
+<edomvd>An area inundated by 1% annual chance flooding(100-year flood), for which no BFEs have been determined</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>AE</edomv>
+<edomvd>An area inundated by 1% annual chance flooding (100-year flood), for which BFEs have been determined</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>AH</edomv>
+<edomvd>
+An area inundated by 1% annual chance flooding (100-year flood) (usually an area of ponding), for which BFEs
+have been determined; flood depths range from 1 to 3 feet
+</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>AO</edomv>
+<edomvd>
+An area inundated by 1% annual chance flooding (100 year flood)(usually sheet flow on sloping terrain), for
+which average depth have been determined; flood depths range from 1 to 3 feet
+</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>X</edomv>
+<edomvd>
+Areas of 500-yr flood annual chance of flooding), areas of 100-year flood with average depths of less than 1 foot
+or with drainage areas less than 1 square mile; and areas protected by levees from 100-year flood
+</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>1 PCT Future Conditions</edomv>
+<edomvd>1% chance of flooding in future conditions</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Floodway</attrlabl>
+<attrdef>
+Floodway area designated by FEMA and adopted by communities to provide an area that will remain free of development to moderate
+increases in flood heights due to encroachment on the floodplain.
+</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<edom>
+<edomv>Floodway</edomv>
+<edomvd>
+An area that includes the channel of a river or other watercourse and the adjacent land areas that must be reserved
+in order to discharge the base flood without cumulatively increasing the water-surface elevation by more than a designated height. (Note: this area is
+normally in Zone AE.)
+</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>Blank</edomv>
+<edomvd>Not a floodway</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SFHA_TF</attrlabl>
+<attrdef>In special flood hazard area</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<edom>
+<edomv>T</edomv>
+<edomvd>True [DESCRIPTION]</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+<edom>
+<edomv>F</edomv>
+<edomvd>False [DESCRIPTION]</edomvd>
+<edomvds>FEMA</edomvds>
+</edom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Static_BFE</attrlabl>
+<attrdef>
+Areas of constant Base Flood Elevation (BFE) where the same BFE applies to the entire polygon. This
+normally occurs in lakes or coastal zones. (-9999 represents &quot;no data&quot;).
+</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>378.00</rdommin>
+<rdommax>997.00</rdommax>
+<attrunit>Feet</attrunit>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>V_datum</attrlabl>
+<attrdef>Vertical Datum used to reference Static BFE</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>character field, “ngvd29” and &quot;ngvd&quot;</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Depth</attrlabl>
+<attrdef>Depth value for zone AO areas.</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>0.00</rdommin>
+<rdommax>2.00</rdommax>
+<attrunit>Feet</attrunit>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Len_Unit</attrlabl>
+<attrdef>Measurement unit for BFEs and Depths (&quot;Feet&quot;)</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Velocity</attrlabl>
+<attrdef>Velocity of the flood flow in this in alluvial fan areas (certain AO zones).</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>numeric field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Vel_unit</attrlabl>
+<attrdef>Measurement units for velocity, listed only if velocities are present.</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Ar_revert</attrlabl>
+<attrdef>
+If the area is Zone AR, this field shows the zone the area would revert to if the AR zone is removed. This is only
+populated if the corresponding flood zone is AR.
+</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Bfe_revert</attrlabl>
+<attrdef>If flood zone is AR, this field shows the static base flood elevation for the reverted zone</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>numeric field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Dep_revert</attrlabl>
+<attrdef>If zone is AR, this field is the flood depth for the reverted zone</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>numeric field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>Source_cit</attrlabl>
+<attrdef>The citation of the map source of the feature. Most are FIRM maps but some are IDNR supplemental sources.</attrdef>
+<attrdefs>FEMA FIRM</attrdefs>
+<attrdomv>
+<udom>character field</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>GLOBALID</attrlabl>
+<attrdef>Global identification number for each feature (SDE internal identifier)</attrdef>
+<attrdefs>Indiana Department of Natural Resources</attrdefs>
+<attrdomv>
+<udom>Character</udom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SHAPE_LEN</attrlabl>
+<attrdef>Perimeter in meters</attrdef>
+<attrdefs>Software computed</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>0.020662</rdommin>
+<rdommax>1066000.9805</rdommax>
+<attrunit>Meters</attrunit>
+</rdom>
+</attrdomv>
+</attr>
+<attr>
+<attrlabl>SHAPE_AREA</attrlabl>
+<attrdef>Area in square meters</attrdef>
+<attrdefs>Software computed</attrdefs>
+<attrdomv>
+<rdom>
+<rdommin>0.000017</rdommin>
+<rdommax>1274101716.68</rdommax>
+<attrunit>Square meters</attrunit>
+</rdom>
+</attrdomv>
+</attr>
+</detailed>
+</eainfo>
+<distinfo>
+<distrib>
+<cntinfo>
+<cntorgp>
+<cntorg>[PRIMARY DISTRIBUTOR] Indiana Department of Natural Resources</cntorg>
+<cntper>Michael P. Martin</cntper>
+</cntorgp>
+<cntpos>Agency GIS Coordinator</cntpos>
+<cntaddr>
+<addrtype>mailing and physical address</addrtype>
+<address>402 W. Washington St., Room 280</address>
+<city>Indianapolis</city>
+<state>Indiana</state>
+<postal>46204</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>317 232 4068</cntvoice>
+<cntfax>317 233 4648</cntfax>
+<cntemail>mmartin@dnr.in.us</cntemail>
+<hours>8 to 4:30</hours>
+</cntinfo>
+</distrib>
+<resdesc>Downloadable Data</resdesc>
+<distliab>User assumes all liability.</distliab>
+</distinfo>
+<distinfo>
+<distrib>
+<cntinfo>
+<cntorgp>
+<cntorg>[SECONDARY DISTRIBUTOR] Indiana Geological and Water Survey</cntorg>
+<cntper>Publication Sales</cntper>
+</cntorgp>
+<cntpos>Clerk</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 855 7636</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>IGSinfo@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday-Friday, except holidays</cntinst>
+</cntinfo>
+</distrib>
+<resdesc>Downloadable Data</resdesc>
+<distliab>
+
+INDIANA GEOLOGICAL AND WATER SURVEY DATA DISCLAIMER - This data set is provided by Indiana University, Indiana Geological and Water Survey,
+and contains data believed to be accurate; however, a degree of error is inherent in all data. This product is distributed &quot;AS-IS&quot; without
+warranties of any kind, either expressed or implied, including but not limited to warranties of suitability of a particular purpose or use.
+No attempt has been made in either the designed format or production of these data to define the limits or jurisdiction of any federal, state,
+or local government. These data are intended for use only at the published scale or smaller and are for reference purposes only. They are not
+to be construed as a legal document or survey instrument. A detailed on-the-ground survey and historical analysis of a single site may differ
+from these data.
+
+CREDIT - It is requested that the Indiana Geological and Water Survey be cited in any products generated from this data. The
+following source citation should be included: [FLOODPLAINS_FIRM_IDNR_IN: Floodplains and Flood Hazard Zones in Indiana, (Indiana Department
+of Natural Resources, 1:12,000, Polygon Shapefile), 20190122].
+</distliab>
+</distinfo>
+<metainfo>
+<metd>20041011</metd>
+<metrd>20190222</metrd>
+<metc>
+<cntinfo>
+<cntorgp>
+<cntorg>Indiana Geological and Water Survey</cntorg>
+<cntper>Chris Dintaman</cntper>
+</cntorgp>
+<cntpos>GIS Specialist/Geologist</cntpos>
+<cntaddr>
+<addrtype>Mailing and physical address</addrtype>
+<address>611 North Walnut Grove Avenue</address>
+<city>Bloomington</city>
+<state>Indiana</state>
+<postal>47405 2208</postal>
+<country>USA</country>
+</cntaddr>
+<cntvoice>812 856 5654</cntvoice>
+<cntfax>812 855 2862</cntfax>
+<cntemail>cdintama@indiana.edu</cntemail>
+<hours>0800 to 1700 Eastern Standard Time</hours>
+<cntinst>Monday through Friday, except holidays</cntinst>
+</cntinfo>
+</metc>
+<metstdn>FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+<metstdv>FGDC-STD-001-1998</metstdv>
+<metac>None</metac>
+<metuc>
+This metadata file is intended to accompany the  data set identified and received from the IGWS. It should not to be altered or summarized. IGWS
+does not support secondary distribution. If this data set was received from anyone besides the IGWS, this metadata file and the data set it
+describes may lack integrity.
+</metuc>
+</metainfo>
+</metadata>

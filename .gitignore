@@ -7,3 +7,17 @@
 *.dbf
 *.shp
 *.zip
+*.lyr
+*.CPG
+*.sbn
+*.sbx
+*.aux
+*.adf
+*.rrd
+*.dat
+*.nit
+*.cpg
+*.ige
+*.rde
+*.img
+*.RData
