@@ -33,12 +33,18 @@ nlcd; st_crs(nlcd); image(nlcd) # CONUS
 #   3) Find/show any relationship between elevation (x-direction) and slope (y-direction); you
 #     may try several binning (in both x and y) for this relationships
 
-tmap_mode('view')
-tm_shape(dem) + tm_raster(alpha=0.7, title='Elevation') + tm_scale_bar() + 
-  tmap_options(max.raster=c(plot = 1000000, view = 1000000))
+png('./figures/dem.png')
+tm_shape(dem) + tm_raster(alpha=0.7, title='Elevation') + tm_compass() + tm_scale_bar() + 
+  tm_layout(panel.labels='Digital Elevation Model', legend.bg.color='white',
+            legend.bg.alpha=.3)
+dev.off()
 
 slope <- terrain(dem, opt='slope')
-mapview(slope)
+png('./figures/slope.png')
+tm_shape(slope) + tm_raster(alpha=0.7, title='Slope') + tm_compass() + tm_scale_bar() + 
+  tm_layout(panel.labels='Slope', legend.bg.color='white',
+            legend.bg.alpha=.3)
+dev.off()
 
 # coerce the rasters to vectors
 dem.vect <- as.data.frame(dem, xy=T) %>% na.omit
@@ -66,8 +72,11 @@ dev.off()
 #1)
 counties <- st_transform(counties, crs=st_crs(dem))
 dem <- crop(dem, counties)
-mapview(dem)
-tm_shape(counties) + tm_polygons() + tm_scale_bar()
+
+png('./figures/counties.png')
+tm_shape(counties) + tm_polygons() + tm_compass() + tm_scale_bar() +
+  tm_layout(panel.labels='Indiana Counties')
+dev.off()
 
 
 #2) The nlcd data is way to big to try to map prior to subsetting, you'll need to clip it with other data first
@@ -84,21 +93,26 @@ mapview(nlcd)
 myPallette = rev(c('#64B3D5', '#C8E6F8', '#CA9146', '#FBF65D', '#FDE9AA', '#DCCA8F', '#D4E7B0', 
                    '#38814E', '#85C77E', '#D2CDC0', '#B50000', '#FF0000', '#E29E8C', '#E8D1D1',
                    '#5475A8'))
+png('./figures/nlcdMap.png')
 rasterVis::levelplot(nlcd, col.regions=myPallette, main='NLCD Raster for Indiana',
                      xlab='Longitude (m)', ylab='Latitude (m)')
+dev.off()
 
 #3) flood data takes forever to plot
 flood <- lwgeom::st_make_valid(flood) # not all of the geometries are valid
 flood <- st_transform(flood, crs=st_crs(dem))
 
+# Weird issue with text sizing, need to set levels manually. Maybe use the zones
+flood$FLD_ZONE <- recode_factor(tmp$FLD_ZONE, `AREA NOT INCLUDED` = 'Area Not Included',
+                                `OPEN WATER`='Open Water', X='100/500 Year, Protected',
+                                A='100 Year', AE='100 Year', AH='100 Year, 1-3 ft',
+                                AO='100 Year, 1-3 ft')
 
-
-##############################
-# ISSUE GETTING MAPPING FOR FLOOD
-
-
-#mapview(flood$geometry)
-
+png('./figures/floodMap.png')
+tm_shape(flood) + tm_fill('FLD_ZONE', title='Flood Zone', palette=brewer.pal(5, 'Blues')) + 
+  tm_compass() + tm_scale_bar() + 
+  tm_layout(panel.labels='Flood Zones',inner.margins=c(.1,0,0,.3), legend.text.size=1)
+dev.off()
 
 # given the time to download this data, I'm saving the rasters to read in if necessary later
 # writeRaster(dem, filename='./data/processed/dem.grd', overwrite=T)
@@ -127,30 +141,68 @@ counties$slopeMean <- slopeMean.cnty
 counties$slopeStd <- slopeStd.cnty
 
 tmap_mode('plot')
-
+png('./figures/elevCnty.png')
 tm_shape(counties) + tm_fill('elevMean', title='Elevation (m)') + tm_borders() + 
-  tm_scale_bar() + tm_layout()
+  tm_scale_bar() + 
+  tm_layout(panel.labels='Mean Elevation By County',inner.margins=c(.18,0,0,0))
+dev.off()
 
+png('./figures/stdElevCnty.png')
 tm_shape(counties) + tm_fill('elevStd', title='Elevation (m)') + tm_borders() + 
-  tm_scale_bar() + tm_layout()
+  tm_scale_bar() +
+  tm_layout(panel.labels='Std. Dev. of Elevation By County',inner.margins=c(.18,0,0,0))
+dev.off()
 
+png('./figures/slopeCnty.png')
 tm_shape(counties) + tm_fill('slopeMean', title='Slope (Degrees)') + tm_borders() + 
-  tm_scale_bar() + tm_layout()
+  tm_scale_bar() + 
+  tm_layout(panel.labels='Mean Slope By County',inner.margins=c(.18,0,0,0))
+dev.off()
 
+png('./figures/stdslopeCnty.png')
 tm_shape(counties) + tm_fill('slopeStd', title='Slope (Degrees)') + tm_borders() + 
-  tm_scale_bar() + tm_layout()
+  tm_scale_bar() + 
+  tm_layout(panel.labels='Std. Dev. of Slope By County',inner.margins=c(.18,0,0,0))
+dev.off()
 
 #2) the data has to be coerced to match up
-nlcd.dem <- crop(nlcd, dem)
-extent(nlcd.dem) <- extent(dem)
-elevMean.nlcd <- zonal(dem, nlcd.dem, fun='mean', method='simple')
-elevStd.nlcd <- zonal(dem, nlcd.dem, fun=sd, method='simple')
+dem.nlcd <- resample(dem, nlcd)
+elevMean.nlcd <- zonal(dem.nlcd, nlcd, fun='mean', method='simple')
+elevStd.nlcd <- zonal(dem.nlcd, nlcd, fun=sd, method='simple')
 
-nlcd.slope <- crop(nlcd,slope)
-slope.nlcd <- crop(slope, nlcd.slope)
-extent(slope.nlcd) <- extent(nlcd.slope)
-slopeMean.nlcd <- zonal(slope.nlcd, nlcd.slope, fun='mean', method='simple')
-slopeStd.nlcd <- zonal(slope.nlcd, nlcd.slope, fun=sd, method='simple')
+slope.nlcd <- resample(slope, nlcd)
+slopeMean.nlcd <- zonal(slope.nlcd, nlcd, fun='mean', method='simple')
+slopeStd.nlcd <- zonal(slope.nlcd, nlcd, fun=sd, method='simple')
+
+nlcd.zonal <- merge(elevMean.nlcd, elevStd.nlcd, by='zone') %>% merge(slopeMean.nlcd, by='zone') %>%
+  merge(slopeStd.nlcd, by='zone')
+colnames(nlcd.zonal) <- c('zone', 'meanElevation', 'stdElevation', 'meanSlope', 'stdSlope')
+nlcd.zonal$class <- nlcd@data@attributes[[1]]$NLCD.class
+
+png('./figures/barchart_elevationByClass.png')
+barchart(meanElevation~class, data=nlcd.zonal, col='deepskyblue3', ylim=c(0,280),
+         ylab='Mean Elevation (m)', scales=list(x=list(rot=90), y=list(at=seq(0,280, 40))),
+         main='Mean Elevation by Land Cover Class')
+dev.off()
+
+png('./figures/barchart_stdElevByClass.png')
+barchart(stdElevation~class, data=nlcd.zonal, col='deepskyblue3', ylim=c(0,70),
+         ylab='Std. Dev. Elevation (m)', scales=list(x=list(rot=90), y=list(at=seq(0,70, 10))),
+         main='Std. Deviation of Elevation by Land Cover Class')
+dev.off()
+
+png('./figures/barchart_slopeByClass.png')
+barchart(meanSlope~class, data=nlcd.zonal, col='deepskyblue3', ylim=c(0,.1),
+         ylab='Mean Slope (Degrees)', scales=list(x=list(rot=90), y=list(at=seq(0,.1, 0.01))),
+         main='Mean Slope by Land Cover Class')
+dev.off()
+
+png('./figures/barchart_stdSlopeByClass.png')
+barchart(stdSlope~class, data=nlcd.zonal, col='deepskyblue3', ylim=c(0,.1),
+         ylab='Std. Dev. Slope (Degrees)', scales=list(x=list(rot=90), y=list(at=seq(0,.1, 0.01))),
+         main='Std. Deviation of Slope by Land Cover Class')
+dev.off()
+
 
 # Data is fine being tabular.
 # save the data up to this point
@@ -158,10 +210,22 @@ load('./data/processed/projected&processedData.Rdata')
 
 #3) ### Not quite sure what to do with these, the data values are entirely too high.
 elevMean.fld <- exact_extract(dem, flood, fun='mean')
+flood$elevMean <- elevMean.fld
 elevStd.fld <- exact_extract(dem, flood, function(value, cov_frac) sd(value*cov_frac))
+flood$elevStd <- elevStd.fld
+
+elevMean.fld <- aggregate(flood$elevMean, by=list(flood$FLD_ZONE), FUN=mean)
+elevStd.fld <- aggregate(flood$elevStd, by=list(flood$FLD_ZONE), FUN=mean)
 
 slopeMean.fld <- exact_extract(slope, flood, fun='mean')
+flood$slopeMean <- slopeMean.fld
 slopeStd.fld <- exact_extract(slope, flood, function(value, cov_frac) sd(value*cov_frac))
+flood$slopeStd <- slopeStd.fld
+
+slopeMean.fld <- aggregate(flood$slopeMean, by=list(flood$FLD_ZONE), FUN=mean)
+slopeStd.fld <- aggregate(flood$slopeStd, by=list(flood$FLD_ZONE), FUN=mean)
+
+
 # 5. Bonus (3 pts)
 #   1) Evaluate the county’s risk based on its population and its floodplain
 #   2) Reclassify/classify elevations (or slopes) using one of the data classifiers we discussed
