@@ -100,6 +100,12 @@ flood <- st_transform(flood, crs=st_crs(dem))
 #mapview(flood$geometry)
 
 
+# given the time to download this data, I'm saving the rasters to read in if necessary later
+# writeRaster(dem, filename='./data/processed/dem.grd', overwrite=T)
+# writeRaster(nlcd, filename='./data/processed/nlcd.grd', overwrite=T)
+# st_write(counties, dsn='./data/processed/counties', layer='counties', driver='ESRI Shapefile')
+# st_write(flood, dsn='./data/processed/flood', layer='flood', driver='ESRI Shapefile')
+
 # 4. Zonal analysis (6 pts)
 #   1) Determine the mean, standard deviation of elevation and slope for each county
 #   2) Determine the mean, std. dev. of elevation and slope for land cover classes
