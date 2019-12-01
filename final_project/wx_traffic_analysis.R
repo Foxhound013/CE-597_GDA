@@ -2,6 +2,8 @@ library(lattice)
 library(data.table)
 library(dplyr)
 library(tidyr)
+library(mice)
+library(miceadds)
 
 ##### Load & Prep Data #####
 precip <- fread('./data/processed/interp_precip.csv')
@@ -30,7 +32,15 @@ traffic <- traffic[,list(speed=mean(speed)),
 # Fix missigness in the precip data and join the datasets
 traffic <- traffic %>% left_join(precip, by=c('tstamp', 'lon', 'lat', 'position', 'xdid', 'direction'))
 
-tmp <- traffic[is.na(traffic$precip),]
+tmp <- traffic[is.na(traffic$precip),] # check location of missigness
+
+# impute missing values
+traffic <- traffic %>% group_by(position) %>% do(zoo::na.locf(.))
+traffic <- traffic[order(traffic$tstamp),]
+
+tmp <- traffic[is.na(traffic$precip),] # check location of missigness
+
+
 ##### Data Characterization  #####
 
 # 
