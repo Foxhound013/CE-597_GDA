@@ -39,7 +39,7 @@ pb <- txtProgressBar(min = 1, max = length(timeSeq$tstamp), style = 3)
 final.interp <- data.frame()
 i <- 1
 
-while (i < length(timeSeq$tstamp)) {
+while (i <= length(timeSeq$tstamp)) {
   precipRate <- ncvar_get(mrms,varName, start=c(1,1,i), count=c(411,451,1))
   precip.data <- expand.grid(lon=lon, lat=lat)
   precip.data$precip <- as.vector(precipRate)
@@ -68,4 +68,5 @@ while (i < length(timeSeq$tstamp)) {
   
 }
 
-write.csv('./data/processed/interp_precip.csv', row.names=F, col.names=T, sep=',')
+nc.close(mrms)
+write.csv(x=final.interp, file='./data/processed/interp_precip.csv', row.names=F)
