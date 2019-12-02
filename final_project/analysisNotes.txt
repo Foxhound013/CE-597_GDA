@@ -1,0 +1,11 @@
+Civil twilight seems to show much lower speeds in the presence of high precipitation events than
+night time events.
+
+This could possibly be due to traffic volumes but there is no way to verify this with the current data set available.
+
+Civil twilight hours were determined from: https://www.timeanddate.com/sun/usa/sunrise?month=6&year=2018
+------------
+
+When split out by day of week, something very interesting occurs. Monday has very little precipitation.
+
+Wednesday, Thursday, Friday show the most low speed events in the presence of precipitation.
