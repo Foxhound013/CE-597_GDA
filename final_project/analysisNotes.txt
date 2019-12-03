@@ -26,6 +26,10 @@ Night & rain
 a review of precipvspeeds_events.png reveals that a majority of the slow down events that occurred in the presence of 
 precipitation shows significantly lower speeds at night. This was discovered when events were labeled as precip > 0 and speed <60.
 
+The result is somewhat surprising, I would not have expected to see a majority of low speed/high precip events occurring at night
+due to the inherit low volumes. Could it be that civil twilight is not the best classification and a finer scale is necessary?
+A scale like night,morning(including typical work travel times), noonish, and evening?
+
 It would be worthwhile to sum up the number of events per each classification from the figure above in order to normalize the
 values in each.
 
@@ -34,6 +38,14 @@ In any case, need to develop some statistics about each of these classifications
 	avg speed
 	avg precip
 	variance
+	std dev
+
+Note: Variance weights outliers greater due to the square. This will help point out segments that have outliers.
 
 Can you produce a kernel density plot for each?
+
+When reviewing the event frequency, a particular location pops up at night. A google maps search makes it clear that bridge
+construction was occuring near this location around this time. https://www.gxcontractor.com/equipment/article/13016765/road-building-at-night
+corroborates the fact that bridge building is a night time venture, helping to explain the high number of slow downs at night.
+
 

@@ -4,6 +4,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(ggridges)
+library(sf)
+library(tmap)
 
 ##### Load & Prep Data #####
 precip <- fread('./data/processed/interp_precip.csv')
@@ -102,12 +104,10 @@ traffic.events <- traffic %>% group_by(position) %>%
             day=day,
             event=ifelse((precip > 0 & speed < 60), yes=T, no=F))
 
-tmp <- traffic.events %>% filter(position==250)
-
-fig.key <- list(space='bottom', columns=2,
-                text = list(c("Night", "Day")),
-                lines = list(type = c("p", "p"), col = c("blue", "red"), pch = c(16,16))
-                )
+# fig.key <- list(space='bottom', columns=2,
+#                 text = list(c("Night", "Day")),
+#                 lines = list(type = c("p", "p"), col = c("blue", "red"), pch = c(16,16))
+#                 )
 
 png('./figures/precipvspeeds_events.png', width=1080, height=760)
 xyplot(precip~speed | factor(ifelse(event,'Traffic Slow Down','Usual Traffic')) * 
@@ -119,10 +119,58 @@ xyplot(precip~speed | factor(ifelse(event,'Traffic Slow Down','Usual Traffic')) 
 dev.off()
 #col=c('blue','red')
 
+# can produce a heat map with this
+events.summary <- traffic.events %>% group_by(position) %>% 
+  summarize(sumEventsNight=sum(ifelse((light==F & event==T), yes=1, no=0), na.rm=T),
+            meanSpd_EventsNight=mean(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+            varSpd_EventsNight=var(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+            sdSpd_EventsNight=sd(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+            
+            meanPrecip_EventsNight=mean(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
+            varPrecip_EventsNight=var(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
+            sdPrecip_EventsNight=sd(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
+            
+            sumEventsDay=sum(ifelse((light==T & event==T), yes=1, no=0), na.rm=T),
+            meanSpd_EventsDay=mean(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            varSpd_EventsDay=var(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            sdSpd_EventsDay=sd(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            
+            meanPrecip_EventsDay=mean(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
+            varPrecip_EventsDay=var(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
+            sdPrecip_EventsDay=sd(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),)
 
+# verify validity
+tmp <- traffic.events %>% filter(position==241) %>%  filter(light==T & event==T)
+sum(tmp$event)
+var(tmp$speed)
+mean(tmp$speed)
+sd(tmp$speed)
 
+plot(events.summary$position, events.summary$sumEventsNight, col='blue', pch=16)
+points(events.summary$position, events.summary$sumEventsDay, col='red', pch=16)
 
+plot(events.summary$position, events.summary$meanSpd_EventsNight, col='blue', pch=16)
+points(events.summary$position, events.summary$meanSpd_EventsDay, col='red', pch=16)
 
+plot(events.summary$position, events.summary$meanPrecip_EventsNight, col='blue', pch=16)
+points(events.summary$position, events.summary$meanPrecip_EventsDay, col='red', pch=16)
+
+plot(events.summary$position, events.summary$sdPrecip_EventsNight, col='blue', pch=16)
+points(events.summary$position, events.summary$sdPrecip_EventsDay, col='red', pch=16)
+
+# interestingly, this reveals there is a spatial component to these
+uniqueSegs <- traffic %>% select(position, lon, lat) %>% unique()
+tmp <- events.summary %>% left_join(uniqueSegs, by='position') %>% st_as_sf(coords=c('lon','lat'))
+
+tmap_mode('view')
+tm_shape(tmp) + tm_dots('sumEventsNight')
+tm_shape(tmp) + tm_dots('sumEventsDay')
+
+densityplot(~sumEventsNight, data=events.summary)
+densityplot(~sumEventsDay, data=events.summary)
+
+hist(traffic.e.counts$sumEventsDay)
+if(tmp$light) sum()
 
 
 
