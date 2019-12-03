@@ -90,11 +90,19 @@ dev.off()
 
 # a more appropriate x and y scale may also be useful in fleshing out this relationship some
 
+traffic <- traffic %>% group_by(position) %>% arrange(tstamp) # guarantees time stamp order
 
+# we need a definition of normal and non normal traffic flow.
+traffic.norm <- traffic %>% group_by(position) %>% 
+  transmute(tstamp=tstamp,
+            speed=speed,
+            precip=precip,
+            light=light,
+            )
 
 
 # create 30 minute window around rain events.
-traffic <- traffic %>% group_by(position) %>% arrange(tstamp) # guarantees time stamp order
+
 
 traffic.events <- traffic %>% group_by(position) %>% 
   transmute(tstamp=tstamp,
@@ -119,25 +127,44 @@ xyplot(precip~speed | factor(ifelse(event,'Traffic Slow Down','Usual Traffic')) 
 dev.off()
 #col=c('blue','red')
 
+nonevents.summary <- traffic.events %>% group_by(position) %>%
+  summarize(sumNight=sum(ifelse((light==F & event==F), yes=1, no=0), na.rm=T),
+            meanSpd_Night=mean(ifelse((light==F & event==F), yes=speed, no=NA), na.rm=T),
+            varSpd_Night=var(ifelse((light==F & event==F), yes=speed, no=NA), na.rm=T),
+            sdSpd_Night=sd(ifelse((light==F & event==F), yes=speed, no=NA), na.rm=T),
+            
+            meanPrecip_Night=mean(ifelse((light==F & event==F), yes=precip, no=NA), na.rm=T),
+            varPrecip_Night=var(ifelse((light==F & event==F), yes=precip, no=NA), na.rm=T),
+            sdPrecip_Night=sd(ifelse((light==F & event==F), yes=precip, no=NA), na.rm=T),
+            
+            sumDay=sum(ifelse((light==T & event==F), yes=1, no=0), na.rm=T),
+            meanSpd_Day=mean(ifelse((light==T & event==F), yes=speed, no=NA), na.rm=T),
+            varSpd_Day=var(ifelse((light==T & event==F), yes=speed, no=NA), na.rm=T),
+            sdSpd_Day=sd(ifelse((light==T & event==F), yes=speed, no=NA), na.rm=T),
+            
+            meanPrecip_Day=mean(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),
+            varPrecip_Day=var(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),
+            sdPrecip_Day=sd(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),)
+
 # can produce a heat map with this
 events.summary <- traffic.events %>% group_by(position) %>% 
-  summarize(sumEventsNight=sum(ifelse((light==F & event==T), yes=1, no=0), na.rm=T),
-            meanSpd_EventsNight=mean(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
-            varSpd_EventsNight=var(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
-            sdSpd_EventsNight=sd(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+  summarize(sumNight=sum(ifelse((light==F & event==T), yes=1, no=0), na.rm=T),
+            meanSpd_Night=mean(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+            varSpd_Night=var(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
+            sdSpd_Night=sd(ifelse((light==F & event==T), yes=speed, no=NA), na.rm=T),
             
-            meanPrecip_EventsNight=mean(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
-            varPrecip_EventsNight=var(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
+            meanPrecip_Night=mean(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
+            varPrecip_Night=var(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
             sdPrecip_EventsNight=sd(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
             
             sumEventsDay=sum(ifelse((light==T & event==T), yes=1, no=0), na.rm=T),
-            meanSpd_EventsDay=mean(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
-            varSpd_EventsDay=var(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
-            sdSpd_EventsDay=sd(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            meanSpd_Day=mean(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            varSpd_Day=var(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
+            sdSpd_Day=sd(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
             
-            meanPrecip_EventsDay=mean(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
-            varPrecip_EventsDay=var(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
-            sdPrecip_EventsDay=sd(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),)
+            meanPrecip_Day=mean(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
+            varPrecip_Day=var(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
+            sdPrecip_Day=sd(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),)
 
 # verify validity
 tmp <- traffic.events %>% filter(position==241) %>%  filter(light==T & event==T)
@@ -145,6 +172,12 @@ sum(tmp$event)
 var(tmp$speed)
 mean(tmp$speed)
 sd(tmp$speed)
+
+# what is the difference?
+tmp <- round((nonevents.summary - events.summary), 2)
+
+
+
 
 plot(events.summary$position, events.summary$sumEventsNight, col='blue', pch=16)
 points(events.summary$position, events.summary$sumEventsDay, col='red', pch=16)
@@ -166,11 +199,9 @@ tmap_mode('view')
 tm_shape(tmp) + tm_dots('sumEventsNight')
 tm_shape(tmp) + tm_dots('sumEventsDay')
 
-densityplot(~sumEventsNight, data=events.summary)
-densityplot(~sumEventsDay, data=events.summary)
-
-hist(traffic.e.counts$sumEventsDay)
-if(tmp$light) sum()
+# further refine the events into min and max
+events.minmax <- events.summary %>% ungroup() %>% 
+  summarize_all(list(min,max), na.rm=T) %>% t
 
 
 

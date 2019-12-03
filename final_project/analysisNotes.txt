@@ -49,3 +49,5 @@ construction was occuring near this location around this time. https://www.gxcon
 corroborates the fact that bridge building is a night time venture, helping to explain the high number of slow downs at night.
 
 
+
+CONSIDER HEXAGONAL/RECTANGULAR BINNING TO CLEAN UP SCATTER PLOTS. OR 2D DENSITY MAY BE GOOD
