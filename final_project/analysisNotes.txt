@@ -9,3 +9,31 @@ Civil twilight hours were determined from: https://www.timeanddate.com/sun/usa/s
 When split out by day of week, something very interesting occurs. Monday has very little precipitation.
 
 Wednesday, Thursday, Friday show the most low speed events in the presence of precipitation.
+
+------------
+
+Need to determine the standard state of traffic under no precipitation conditions.
+
+Speed states to characterize, what is the min, max, median, and variance for each?
+
+Day & no rain
+Night & no rain
+
+Day & rain
+Night & rain
+
+-----------
+a review of precipvspeeds_events.png reveals that a majority of the slow down events that occurred in the presence of 
+precipitation shows significantly lower speeds at night. This was discovered when events were labeled as precip > 0 and speed <60.
+
+It would be worthwhile to sum up the number of events per each classification from the figure above in order to normalize the
+values in each.
+
+In any case, need to develop some statistics about each of these classifications
+	sum of each type
+	avg speed
+	avg precip
+	variance
+
+Can you produce a kernel density plot for each?
+

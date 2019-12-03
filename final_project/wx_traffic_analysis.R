@@ -2,6 +2,8 @@ library(lattice)
 library(data.table)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
+library(ggridges)
 
 ##### Load & Prep Data #####
 precip <- fread('./data/processed/interp_precip.csv')
@@ -84,18 +86,123 @@ xyplot(precip~speed | factor(day), data=traffic, pch=16, col='deepskyblue3', alp
        layout=c(7,1), par.strip.text=list(cex=.8))
 dev.off()
 
-# sector of day (morning, afternoon, evening, night)?
-
 # a more appropriate x and y scale may also be useful in fleshing out this relationship some
+
+
+
+
+# create 30 minute window around rain events.
+traffic <- traffic %>% group_by(position) %>% arrange(tstamp) # guarantees time stamp order
+
+traffic.events <- traffic %>% group_by(position) %>% 
+  transmute(tstamp=tstamp,
+            speed=speed,
+            precip=precip,
+            light=light,
+            day=day,
+            event=ifelse((precip > 0 & speed < 60), yes=T, no=F))
+
+tmp <- traffic.events %>% filter(position==250)
+
+fig.key <- list(space='bottom', columns=2,
+                text = list(c("Night", "Day")),
+                lines = list(type = c("p", "p"), col = c("blue", "red"), pch = c(16,16))
+                )
+
+png('./figures/precipvspeeds_events.png', width=1080, height=760)
+xyplot(precip~speed | factor(ifelse(event,'Traffic Slow Down','Usual Traffic')) * 
+         factor(ifelse(light, 'Night', 'Day')), 
+       data=traffic.events, pch=16, alpha=0.5, jitter=T,
+       layout=c(1,4), xlab='Speed (MPH)', ylab='Precipitation (mm/hr)', grid=T,
+       xlim=c(0,90), ylim=c(0,150), aspect='fill',
+       scales=list(x=list(at=seq(0,90,5)), y=list(at=seq(0,150,30))))
+dev.off()
+#col=c('blue','red')
+
+
+
+
+
+
+
+
+
+
+
 
 
 # what happens if we look at any event where rain occurs and measure the max speed drop
 # over the next 30 minutes.
 # this would produce a precip value and max speed drop for precip.
 
-tmp <- traffic %>% group_by(position) %>% 
-  mutate(fourteenMinLag=speed - dplyr::lag(speed,n=7,default=NA),
-         thirtyMinLag=speed - dplyr::lag(speed,n=15,default=NA))
+# may be a good idea to calculate lagged speeds and their precipitation values
+# as a seperate table
 
-tmp2 <- tmp %>% filter(position==250)
+speedStats <- traffic %>% group_by(position) %>% 
+  transmute(tstamp=tstamp,
+            speed=speed,
+            precip=precip,
+            light=light,
+            twoMinLag=speed - dplyr::lag(speed,n=1,default=NA),
+            twoMinPrecip=precip - dplyr::lag(precip,n=1,default=NA),
+            fourMinLag=speed - dplyr::lag(speed,n=2,default=NA),
+            sixMinLag=speed - dplyr::lag(speed,n=3,default=NA),
+            eightMinLag=speed - dplyr::lag(speed,n=4,default=NA),
+            tenMinLag=speed - dplyr::lag(speed,n=5,default=NA),
+            twelveMinLag=speed - dplyr::lag(speed,n=6,default=NA),
+            fourteenMinLag=speed - dplyr::lag(speed,n=7,default=NA),
+            sixteenMinLag=speed - dplyr::lag(speed,n=8,default=NA),
+            eightteenMinLag=speed - dplyr::lag(speed,n=9,default=NA),
+            twentyMinLag=speed - dplyr::lag(speed,n=10,default=NA),
+            twentytwoMinLag=speed - dplyr::lag(speed,n=11,default=NA),
+            twentyfourMinLag=speed - dplyr::lag(speed,n=12,default=NA),
+            twentysixMinLag=speed - dplyr::lag(speed,n=13,default=NA),
+            twentyeightMinLag=speed - dplyr::lag(speed,n=14,default=NA),
+            thirtyMinLag=speed - dplyr::lag(speed,n=15,default=NA),
+            thirtyMinPrecip=dplyr::lag(precip,n=15,default=NA),)
+
+# could calculate a corresponding precip value. That is to say, if we're looking at lagged
+# speeds of twenty mins, the precip from twenty minutes ago can be reflected to the same row
+# so as to match up the values.
+
+
+tmp <- speedStats %>% filter(position==250)
+tmp <- tmp %>% mutate(spd_p_diff=speed-precip)
+
+tmp2 <- traffic %>% filter(precip == 0) %>% transmute(avgSpeed=mean(speed), light=light)
+densityplot(~avgSpeed | factor(light), data=tmp2)
+
+xyplot(precip~fourMinLag, data=tmp, pch=16, alpha=0.5)
+
+
+
+# the ridgeline plot may be good if I can melt the dataframe and get a lag as a categorical
+# variable.
+tmp2 <- reshape2::melt(tmp, id=c('position', 'tstamp', 'speed', 'precip', 'light'))
+
+ggplot(tmp2, aes(x=value, y=variable)) + 
+  geom_density_ridges2(rel_min_height=0.001, scale=1) +
+  facet_wrap(~light)
+
+
+pdf('./figures/precipVfourMinLag.pdf')
+xyplot(precip~fourMinLag | factor(light), data=speedStats, pch=16, alpha=0.5, grid=T,
+       auto.key=T, layout=c(1,2))
+dev.off()
+
+pdf('./figures/desnityPlot.pdf')
+densityplot(~fourMinLag, data=speedStats, layout=c(1,1), alpha=0.5,
+            plot.points=F, groups=light, auto.key=T, grid=T, aspect=1)
+dev.off()
+
+
+pdf('./figures/precipV2MinLag.pdf')
+xyplot(precip~twoMinLag | factor(position), data=speedStats, pch=16, alpha=0.5, grid=T,
+       layout=c(2,2,1), groups=light, auto.key=T)
+dev.off()
+densityplot(~twentyMinLag,data=tmp)
+
+lattice::scat
+# with the data layed out like above, we can roll through the time steps and have a quick look
+# up of the speed drop at any time interval within 30 minutes.
 
