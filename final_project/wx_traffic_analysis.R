@@ -101,8 +101,6 @@ traffic.norm <- traffic %>% group_by(position) %>%
             )
 
 
-# create 30 minute window around rain events.
-
 
 traffic.events <- traffic %>% group_by(position) %>% 
   transmute(tstamp=tstamp,
@@ -123,7 +121,7 @@ densityplot(~speed | factor(light), data=traffic.events, plot.points=F,
 png('./figures/precipvspeeds_events.png', width=1080, height=760)
 xyplot(precip~speed | factor(ifelse(event,'Traffic Slow Down','Usual Traffic')) * 
          factor(ifelse(light, 'Night', 'Day')), 
-       data=traffic.events, pch=16, alpha=0.5, jitter=T,
+       data=tmp, pch=16, alpha=0.5, jitter=T,
        layout=c(1,4), xlab='Speed (MPH)', ylab='Precipitation (mm/hr)', grid=T,
        xlim=c(0,90), ylim=c(0,150), aspect='fill',
        scales=list(x=list(at=seq(0,90,5)), y=list(at=seq(0,150,30))))
