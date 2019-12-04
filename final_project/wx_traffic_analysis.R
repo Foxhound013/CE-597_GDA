@@ -112,6 +112,9 @@ traffic.events <- traffic %>% group_by(position) %>%
             day=day,
             event=ifelse((precip > 0 & speed < 60), yes=T, no=F))
 
+densityplot(~speed | factor(light), data=traffic.events, plot.points=F,
+            layout=c(1,2))
+
 # fig.key <- list(space='bottom', columns=2,
 #                 text = list(c("Night", "Day")),
 #                 lines = list(type = c("p", "p"), col = c("blue", "red"), pch = c(16,16))
@@ -144,7 +147,19 @@ nonevents.summary <- traffic.events %>% group_by(position) %>%
             
             meanPrecip_Day=mean(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),
             varPrecip_Day=var(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),
-            sdPrecip_Day=sd(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T),)
+            sdPrecip_Day=sd(ifelse((light==T & event==F), yes=precip, no=NA), na.rm=T))
+
+
+isolated_normMean <- nonevents.summary %>% select('position', 'meanSpd_Day', 'meanSpd_Night') %>% 
+  reshape2::melt(id=c('position'))
+isolated_normMean$variable <- ifelse((isolated_normMean$variable == 'meanSpd_Day'), 
+                                     'Mean Speed: Day', 'Mean Speed Night')
+isolated_normMean$variable <- as.factor(isolated_normMean$variable)
+bwplot(variable~value, data=isolated_normMean, main='Mean Speed Distribution Under "Normal" Conditions',
+       xlab='Speed (MPH)', xlim=c(60,70), scales=list(x=list(at=seq(60,70,2))))
+
+sum(nonevents.summary$sumNight)/(21600*69) * 100 +
+sum(nonevents.summary$sumDay)/(21600*69) * 100
 
 # can produce a heat map with this
 events.summary <- traffic.events %>% group_by(position) %>% 
@@ -157,7 +172,7 @@ events.summary <- traffic.events %>% group_by(position) %>%
             varPrecip_Night=var(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
             sdPrecip_EventsNight=sd(ifelse((light==F & event==T), yes=precip, no=NA), na.rm=T),
             
-            sumEventsDay=sum(ifelse((light==T & event==T), yes=1, no=0), na.rm=T),
+            sumDay=sum(ifelse((light==T & event==T), yes=1, no=0), na.rm=T),
             meanSpd_Day=mean(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
             varSpd_Day=var(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
             sdSpd_Day=sd(ifelse((light==T & event==T), yes=speed, no=NA), na.rm=T),
@@ -166,122 +181,94 @@ events.summary <- traffic.events %>% group_by(position) %>%
             varPrecip_Day=var(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),
             sdPrecip_Day=sd(ifelse((light==T & event==T), yes=precip, no=NA), na.rm=T),)
 
-# verify validity
-tmp <- traffic.events %>% filter(position==241) %>%  filter(light==T & event==T)
-sum(tmp$event)
-var(tmp$speed)
-mean(tmp$speed)
-sd(tmp$speed)
 
-# what is the difference?
-tmp <- round((nonevents.summary - events.summary), 2)
+isolated_eventMean <- events.summary %>% select('position', 'meanSpd_Day', 'meanSpd_Night') %>% 
+  reshape2::melt(id=c('position'))
+isolated_eventMean$variable <- ifelse((isolated_eventMean$variable == 'meanSpd_Day'), 
+                                     'Mean Speed: Day', 'Mean Speed Night')
+isolated_eventMean$variable <- as.factor(isolated_eventMean$variable)
+bwplot(variable~value, data=isolated_eventMean, main='Mean Speed Distribution Under "Event" Conditions',
+       xlab='Speed (MPH)', xlim=c(20,70), scales=list(x=list(at=seq(20,70,10))))
+
+sum(events.summary$sumNight)/(21600*69) * 100 
+sum(events.summary$sumDay)/(21600*69) * 100
+
+# what is the difference? Negative indicates var in question was higher during an event.
+normVevent <- round((nonevents.summary - events.summary), 2)
+normVevent$position <- events.summary$position
+
+tmp.events <- events.summary %>% select(position, meanSpd_Night, meanSpd_Day)
+tmp.nonEvents <- nonevents.summary %>% select(position, meanSpd_Night, meanSpd_Day)
+
+eventVnon_percent <- 100 - (tmp.events/tmp.nonEvents) * 100
+eventVnon_percent$position <- tmp.events$position
+
+eventPrecip <- events.summary %>% select(position, meanPrecip_Night, meanPrecip_Day)
+eventVnon_percent <- eventVnon_percent %>% left_join(eventPrecip, by='position')
 
 
+png('./figures/percentReduction_Night.png', width=680, height=520)
+xyplot(meanPrecip_Night~meanSpd_Night, data=eventVnon_percent, pch=16,
+       main='Percent Speed Reduction from Normal at Night',
+       xlab='Percent Speed Reduction From Normal', ylab='Mean Precipitation (mm/hr)',
+       xlim=c(0,70), ylim=c(0,70),
+       scales=list(x=list(at=seq(0,70,5)), y=list(at=seq(0,70,10))))
+dev.off()
+densityplot(~meanSpd_Night, data=eventVnon_percent, pch=16,
+            main='Density Estimation of Speed Reduction from Normal at Night',
+            xlab='Percent Speed Reduction From Normal',
+            xlim=c(0,80), ylim=c(0,.1),
+            scales=list(x=list(at=seq(0,80,5)), y=list(at=seq(0,.1,0.01))))
+
+png('./figures/percentReduction_Day.png', width=680, height=520)
+xyplot(meanPrecip_Day~meanSpd_Day, data=eventVnon_percent, pch=16,
+       main='Percent Speed Reduction from Normal during Day',
+       xlab='Percent Speed Reduction From Normal', ylab='Mean Precipitation (mm/hr)',
+       xlim=c(0,70), ylim=c(0,70),
+       scales=list(x=list(at=seq(0,70,5)), y=list(at=seq(0,70,10))))
+dev.off()
+densityplot(~meanSpd_Day, data=eventVnon_percent, pch=16,
+            main='Density Estimation of Speed Reduction from Normal during Day',
+            xlab='Percent Speed Reduction From Normal',
+            xlim=c(0,80), ylim=c(0,.1),
+            scales=list(x=list(at=seq(0,80,5)), y=list(at=seq(0,.1,0.01))))
 
 
-plot(events.summary$position, events.summary$sumEventsNight, col='blue', pch=16)
-points(events.summary$position, events.summary$sumEventsDay, col='red', pch=16)
+#
+plot(events.summary$position, events.summary$sumNight, col='blue', pch=16)
+points(events.summary$position, events.summary$sumDay, col='red', pch=16)
 
-plot(events.summary$position, events.summary$meanSpd_EventsNight, col='blue', pch=16)
-points(events.summary$position, events.summary$meanSpd_EventsDay, col='red', pch=16)
+plot(events.summary$position, events.summary$meanSpd_Night, col='blue', pch=16)
+points(events.summary$position, events.summary$meanSpd_Day, col='red', pch=16)
 
-plot(events.summary$position, events.summary$meanPrecip_EventsNight, col='blue', pch=16)
-points(events.summary$position, events.summary$meanPrecip_EventsDay, col='red', pch=16)
+plot(events.summary$position, events.summary$meanPrecip_Night, col='blue', pch=16)
+points(events.summary$position, events.summary$meanPrecip_Day, col='red', pch=16)
 
-plot(events.summary$position, events.summary$sdPrecip_EventsNight, col='blue', pch=16)
-points(events.summary$position, events.summary$sdPrecip_EventsDay, col='red', pch=16)
+plot(events.summary$position, events.summary$sdPrecip_Night, col='blue', pch=16)
+points(events.summary$position, events.summary$sdPrecip_Day, col='red', pch=16)
+
+
 
 # interestingly, this reveals there is a spatial component to these
 uniqueSegs <- traffic %>% select(position, lon, lat) %>% unique()
-tmp <- events.summary %>% left_join(uniqueSegs, by='position') %>% st_as_sf(coords=c('lon','lat'))
+events.sf <- events.summary %>% left_join(uniqueSegs, by='position') %>% 
+  st_as_sf(coords=c('lon','lat'))
 
 tmap_mode('view')
-tm_shape(tmp) + tm_dots('sumEventsNight')
-tm_shape(tmp) + tm_dots('sumEventsDay')
-
-# further refine the events into min and max
-events.minmax <- events.summary %>% ungroup() %>% 
-  summarize_all(list(min,max), na.rm=T) %>% t
-
-
-
-
+tm_shape(events.sf) + tm_dots('sumNight', title='Sum of Night Events',
+                              style='cont', breaks=c(0,20,40,60,80),
+                              palette='-magma') + tm_scale_bar()
+  
+tm_shape(events.sf) + tm_dots('sumDay', title='Sum of Day Events',
+                              style='cont',breaks=c(0,20,40,60,80),
+                              palette='-magma') + tm_scale_bar()
+seq(0,80,20)
 
 
 
 
-# what happens if we look at any event where rain occurs and measure the max speed drop
-# over the next 30 minutes.
-# this would produce a precip value and max speed drop for precip.
-
-# may be a good idea to calculate lagged speeds and their precipitation values
-# as a seperate table
-
-speedStats <- traffic %>% group_by(position) %>% 
-  transmute(tstamp=tstamp,
-            speed=speed,
-            precip=precip,
-            light=light,
-            twoMinLag=speed - dplyr::lag(speed,n=1,default=NA),
-            twoMinPrecip=precip - dplyr::lag(precip,n=1,default=NA),
-            fourMinLag=speed - dplyr::lag(speed,n=2,default=NA),
-            sixMinLag=speed - dplyr::lag(speed,n=3,default=NA),
-            eightMinLag=speed - dplyr::lag(speed,n=4,default=NA),
-            tenMinLag=speed - dplyr::lag(speed,n=5,default=NA),
-            twelveMinLag=speed - dplyr::lag(speed,n=6,default=NA),
-            fourteenMinLag=speed - dplyr::lag(speed,n=7,default=NA),
-            sixteenMinLag=speed - dplyr::lag(speed,n=8,default=NA),
-            eightteenMinLag=speed - dplyr::lag(speed,n=9,default=NA),
-            twentyMinLag=speed - dplyr::lag(speed,n=10,default=NA),
-            twentytwoMinLag=speed - dplyr::lag(speed,n=11,default=NA),
-            twentyfourMinLag=speed - dplyr::lag(speed,n=12,default=NA),
-            twentysixMinLag=speed - dplyr::lag(speed,n=13,default=NA),
-            twentyeightMinLag=speed - dplyr::lag(speed,n=14,default=NA),
-            thirtyMinLag=speed - dplyr::lag(speed,n=15,default=NA),
-            thirtyMinPrecip=dplyr::lag(precip,n=15,default=NA),)
-
-# could calculate a corresponding precip value. That is to say, if we're looking at lagged
-# speeds of twenty mins, the precip from twenty minutes ago can be reflected to the same row
-# so as to match up the values.
-
-
-tmp <- speedStats %>% filter(position==250)
-tmp <- tmp %>% mutate(spd_p_diff=speed-precip)
-
-tmp2 <- traffic %>% filter(precip == 0) %>% transmute(avgSpeed=mean(speed), light=light)
-densityplot(~avgSpeed | factor(light), data=tmp2)
-
-xyplot(precip~fourMinLag, data=tmp, pch=16, alpha=0.5)
 
 
 
-# the ridgeline plot may be good if I can melt the dataframe and get a lag as a categorical
-# variable.
-tmp2 <- reshape2::melt(tmp, id=c('position', 'tstamp', 'speed', 'precip', 'light'))
 
-ggplot(tmp2, aes(x=value, y=variable)) + 
-  geom_density_ridges2(rel_min_height=0.001, scale=1) +
-  facet_wrap(~light)
-
-
-pdf('./figures/precipVfourMinLag.pdf')
-xyplot(precip~fourMinLag | factor(light), data=speedStats, pch=16, alpha=0.5, grid=T,
-       auto.key=T, layout=c(1,2))
-dev.off()
-
-pdf('./figures/desnityPlot.pdf')
-densityplot(~fourMinLag, data=speedStats, layout=c(1,1), alpha=0.5,
-            plot.points=F, groups=light, auto.key=T, grid=T, aspect=1)
-dev.off()
-
-
-pdf('./figures/precipV2MinLag.pdf')
-xyplot(precip~twoMinLag | factor(position), data=speedStats, pch=16, alpha=0.5, grid=T,
-       layout=c(2,2,1), groups=light, auto.key=T)
-dev.off()
-densityplot(~twentyMinLag,data=tmp)
-
-lattice::scat
-# with the data layed out like above, we can roll through the time steps and have a quick look
-# up of the speed drop at any time interval within 30 minutes.
 
