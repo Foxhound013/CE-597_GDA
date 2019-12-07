@@ -25,3 +25,5 @@
 *.gri
 June_I-65_2018.csv
 *.nc
+interp_precip.csv
+uniqueSegs_I65.csv
